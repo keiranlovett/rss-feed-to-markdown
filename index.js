@@ -39,13 +39,14 @@ async function run() {
       const title = entry.title?.[0]?.replace(/[^\w\s-]/g, '') || '';
       const description = entry['media:group']?.[0]?.['media:description']?.[0] || '';
       const id = entry['yt:videoId']?.[0] || '';
+      const date = entry.published?.[0] || '';
 
       const markdown = template
         .replace('[TITLE]', title)
         .replace('[DESCRIPTION]', description)
         .replace('[ID]', id);
-
-      const slug = sanitize(title.toLowerCase().replace(/\s+/g, '-'));
+      
+      const slug = sanitize(`${formattedDate}-${title.toLowerCase().replace(/\s+/g, '-')}`).substring(0, 50);
       const fileName = `${slug}.md`;
       const filePath = path.join(outputDir, fileName);
 
