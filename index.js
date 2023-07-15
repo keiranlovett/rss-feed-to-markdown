@@ -45,6 +45,8 @@ async function run() {
         .replace('[TITLE]', title)
         .replace('[DESCRIPTION]', description)
         .replace('[ID]', id);
+
+      const formattedDate = date ? new Date(date).toISOString().split('T')[0] : '';
       
       const slug = sanitize(`${formattedDate}-${title.toLowerCase().replace(/\s+/g, '-')}`).substring(0, 50);
       const fileName = `${slug}.md`;
