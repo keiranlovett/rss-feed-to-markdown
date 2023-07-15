@@ -1,0 +1,16 @@
+name: "RSS Feed to Markdown"
+description: "Converts RSS feed entries to Markdown files"
+author: "Keiran Lovett"
+inputs:
+  feed_url:
+    description: "The URL of the RSS feed"
+    required: true
+  template_file:
+    description: "The path to the template file"
+    required: true
+  output_dir:
+    description: "The directory where the generated Markdown files will be saved"
+    required: true
+runs:
+  using: 'node16'
+  main: 'index.js'
