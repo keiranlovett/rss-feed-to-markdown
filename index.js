@@ -48,10 +48,10 @@ async function run() {
       const markdown = template
         .replace('[TITLE]', title)
         .replace('[DESCRIPTION]', description)
-        .replace('[ID]', id);
-        .replace('[THUMBNAIL]', thumbnail);
-        .replace('[LINK]', link);
-        .replace('[DATE]', datepub);
+        .replace('[ID]', id)
+        .replace('[THUMBNAIL]', thumbnail)
+        .replace('[LINK]', link)
+        .replace('[DATE]', datepub)
 
       const formattedDate = date ? new Date(date).toISOString().split('T')[0] : '';
       
