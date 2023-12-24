@@ -37,9 +37,9 @@ async function run() {
     // Process the feed entries and generate Markdown files
     entries.forEach((entry) => {
       const title = entry.title?.[0]?.replace(/[^\w\s-]/g, '') || '';
-      #const description = entry['media:group']?.[0]?.['media:description']?.[0] || '';
+      //const description = entry['media:group']?.[0]?.['media:description']?.[0] || '';
       const description = entry.description?.[0] || '';
-      #const id = entry['yt:videoId']?.[0] || '';
+      //#const id = entry['yt:videoId']?.[0] || '';
       const thumbnail = entry.enclosure?.[0] || '';
       const link = entry.link?.[0] || '';
       const datepub = entry.datepub?.[0] || '';
