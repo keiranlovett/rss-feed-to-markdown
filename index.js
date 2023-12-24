@@ -37,14 +37,21 @@ async function run() {
     // Process the feed entries and generate Markdown files
     entries.forEach((entry) => {
       const title = entry.title?.[0]?.replace(/[^\w\s-]/g, '') || '';
-      const description = entry['media:group']?.[0]?.['media:description']?.[0] || '';
-      const id = entry['yt:videoId']?.[0] || '';
+      #const description = entry['media:group']?.[0]?.['media:description']?.[0] || '';
+      const description = entry.description?.[0] || '';
+      #const id = entry['yt:videoId']?.[0] || '';
+      const thumbnail = entry.enclosure?.[0] || '';
+      const link = entry.link?.[0] || '';
+      const datepub = entry.datepub?.[0] || '';
       const date = entry.published?.[0] || '';
 
       const markdown = template
         .replace('[TITLE]', title)
         .replace('[DESCRIPTION]', description)
         .replace('[ID]', id);
+        .replace('[THUMBNAIL]', thumbnail);
+        .replace('[LINK]', link);
+        .replace('[DATE]', datepub);
 
       const formattedDate = date ? new Date(date).toISOString().split('T')[0] : '';
       
