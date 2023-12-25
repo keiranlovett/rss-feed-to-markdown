@@ -39,7 +39,7 @@ async function run() {
       const title = entry.title?.[0]?.replace(/[^\w\s-]/g, '') || '';
       //const description = entry['media:group']?.[0]?.['media:description']?.[0] || '';
       const description = entry.description?.[0] || '';
-      //#const id = entry['yt:videoId']?.[0] || '';
+      //const id = entry['yt:videoId']?.[0] || '';
       const thumbnail = entry.enclosure?.[0] || '';
       const link = entry.link?.[0] || '';
       const datepub = entry.datepub?.[0] || '';
@@ -48,7 +48,7 @@ async function run() {
       const markdown = template
         .replace('[TITLE]', title)
         .replace('[DESCRIPTION]', description)
-        .replace('[ID]', id)
+        //.replace('[ID]', id)
         .replace('[THUMBNAIL]', thumbnail)
         .replace('[LINK]', link)
         .replace('[DATE]', datepub)
