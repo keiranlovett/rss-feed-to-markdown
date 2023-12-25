@@ -35,7 +35,7 @@ async function run() {
     //const entries = feedData?.feed?.item || [];
     //const entries = feedData?.feed?.entry || [];
     const items = feedData?.rss?.channel?.item || [];
-    console.log(`Feed items '${items.[0].title?.[0]?}' found.`);
+    console.log(`Feed items 'JSON.stringify(${items})' found.`);
 
     // Process the feed entries and generate Markdown files
     items.forEach((item) => {
