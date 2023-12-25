@@ -37,10 +37,10 @@ async function run() {
     const rss = feedData?.rss || [];
     const channel = feedData?.rss?.channel || [];
     const items = feedData?.rss?.channel?.item || [];
-    console.log(`Feed items '${feedData}' found.`, String(feedData));
-    console.log(`Feed items '${rss}' found.`, String(rss));
-    console.log(`Feed items '${channel}' found.`, String(channel));
-    console.log(`Feed items '${items}' found.`, String(items));
+    console.log(`Feed items '${feedData}' found.`, feedData);
+    console.log(`Feed items '${rss}' found.`, rss);
+    console.log(`Feed items '${channel}' found.`, channel);
+    console.log(`Feed items '${items}' found.`, items);
 
     // Process the feed entries and generate Markdown files
     items.forEach((item) => {
