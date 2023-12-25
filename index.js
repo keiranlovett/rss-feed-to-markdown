@@ -36,7 +36,7 @@ async function run() {
     //const entries = feedData?.feed?.entry || [];
     const rss = feedData?.rss || [];
     const channel = feedData?.rss?.channel || [];
-    const items = feedData?.rss?.channel?.item? || [];
+    const items = feedData?.rss?.channel?.item || [];
     //console.log(`Feed items '${feedData}' found.`, feedData);
     //console.log(`Feed items '${rss}' found.`, rss);
     console.log(`Feed items channel found.`, channel);
