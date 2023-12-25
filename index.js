@@ -58,7 +58,8 @@ async function run() {
         .replace('[LINK]', link)
         .replace('[DATE]', datepub)
 
-      const formattedDate = date ? new Date(date).toISOString().split('T')[0] : '';
+      const formattedDate = date ? new Date(Date.parse(date)).toISOString().split('T')[0] : '';
+          
       
       const slug = sanitize(`${formattedDate}-${title.toLowerCase().replace(/\s+/g, '-')}`).substring(0, 50);
       const fileName = `${slug}.md`;
