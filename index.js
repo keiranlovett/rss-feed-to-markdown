@@ -36,12 +36,13 @@ async function run() {
     //const entries = feedData?.feed?.entry || [];
     const rss = feedData?.rss || [];
     const channel = feedData?.rss?.channel || [];
-    const items = feedData?.rss.channel?.item || [];
+    const items = feedData.rss.channel?.item || [];
+    const items2 = feedData?.rss?.channel?.item || [];
     //console.log(`Feed items '${feedData}' found.`, feedData);
     //console.log(`Feed items '${rss}' found.`, rss);
     //console.log(`Feed items channel found.`, channel);
     console.log(`Feed items '${items}' found.`, items);
-
+    console.log(`Feed items '${items2}' found.`, items2);
     // Process the feed entries and generate Markdown files
     items.forEach((item) => {
       const title = item.title?.[0]?.replace(/[^\w\s-]/g, '') || '';
