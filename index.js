@@ -57,9 +57,9 @@ async function run() {
         .replace('[TITLE]', title)
         .replace('[DESCRIPTION]', description)
         //.replace('[ID]', id)
-        .replace('[THUMBNAIL]', thumbnail)
+        .replace('[THUMBNAIL]', thumbnail.url)
         .replace('[LINK]', link)
-        .replace('[ENCLOSURE]', thumbnail)
+        .replace('[ENCLOSURE]', thumbnail.url)
         .replace('[DATE]', formattedDate)
         .replace('[PUBDATE]', formattedDate)
 
