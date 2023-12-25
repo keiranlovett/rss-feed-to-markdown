@@ -47,8 +47,8 @@ async function run() {
       //const id = entry['yt:videoId']?.[0] || '';
       const thumbnail = item.enclosure?.[0] || '';
       const link = item.link?.[0] || '';
-      const datepub = item.pubdate?.[0] || '';
-      const date = item.pubdate?.[0] || '';
+      const datepub = item.pubDate?.[0] || '';
+      const date = item.pubDate?.[0] || '';
 
       const markdown = template
         .replace('[TITLE]', title)
