@@ -37,11 +37,6 @@ async function run() {
     const rss = feedData?.rss || [];
     const channel = feedData?.rss?.channel || [];
     const items = feedData.rss.channel?.[0].item || [];
-    //const items2 = feedData?.rss?.channel?.[0].item || [];
-    //console.log(`Feed items '${feedData}' found.`, feedData);
-    //console.log(`Feed items '${rss}' found.`, rss);
-    //console.log(`Feed items channel found.`, channel);
-    //console.log(`Feed items '${items}' found.`, items);
     console.log(`Feed items found.`, items.length);
     
     // Process the feed entries and generate Markdown files
@@ -52,8 +47,8 @@ async function run() {
       //const id = entry['yt:videoId']?.[0] || '';
       const thumbnail = item.enclosure?.[0] || '';
       const link = item.link?.[0] || '';
-      const datepub = item.datepub?.[0] || '';
-      const date = item.datepub?.[0] || '';
+      const datepub = item.pubdate?.[0] || '';
+      const date = item.pubdate?.[0] || '';
 
       const markdown = template
         .replace('[TITLE]', title)
