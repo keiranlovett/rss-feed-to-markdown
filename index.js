@@ -43,12 +43,15 @@ async function run() {
     items.forEach((item) => {
       const title = item.title?.[0]?.replace(/[^\w\s-]/g, '') || '';
       //const description = entry['media:group']?.[0]?.['media:description']?.[0] || '';
-      const description = item.description?.[0] || '';
+      const description = item.description?.[0].repalce(/["'][\w\s]+["']|\w+["']\w+/, '') || '';
       //const id = entry['yt:videoId']?.[0] || '';
       const thumbnail = item.enclosure?.[0] || '';
       const link = item.link?.[0] || '';
       const datepub = item.pubDate?.[0] || '';
       const date = item.pubDate?.[0] || '';
+
+      //console.log(`Date '${date}'`, Date.parse(date));     
+      const formattedDate = date ? new Date(Date.parse(date)).toISOString().split('T')[0] : '';
 
       const markdown = template
         .replace('[TITLE]', title)
@@ -56,11 +59,9 @@ async function run() {
         //.replace('[ID]', id)
         .replace('[THUMBNAIL]', thumbnail)
         .replace('[LINK]', link)
-        .replace('[DATE]', datepub)
+        .replace('[DATE]', formattedDate)
 
-      //console.log(`Date '${date}'`, Date.parse(date));     
-      const formattedDate = date ? new Date(Date.parse(date)).toISOString().split('T')[0] : '';
-          
+           
       
       const slug = sanitize(`${formattedDate}-${title.toLowerCase().replace(/\s+/g, '-')}`).substring(0, 50);
       const fileName = `${slug}.md`;
