@@ -32,7 +32,7 @@ async function run() {
 
     // Parse the XML feed
     const feedData = await parseStringPromise(feedXml);
-    const entries = feedData?.feed?.entry || [];
+    const entries = feedData?.feed?.item || [];
 
     // Process the feed entries and generate Markdown files
     entries.forEach((entry) => {
