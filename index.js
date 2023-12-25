@@ -58,8 +58,7 @@ async function run() {
         .replace('[LINK]', link)
         .replace('[DATE]', datepub)
 
-      console.log(`Date '${date}'`, Date.parse(date));
-     
+      //console.log(`Date '${date}'`, Date.parse(date));     
       const formattedDate = date ? new Date(Date.parse(date)).toISOString().split('T')[0] : '';
           
       
