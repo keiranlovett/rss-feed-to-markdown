@@ -43,7 +43,7 @@ async function run() {
       const thumbnail = entry.enclosure?.[0] || '';
       const link = entry.link?.[0] || '';
       const datepub = entry.datepub?.[0] || '';
-      const date = entry.published?.[0] || '';
+      const date = entry.datepub?.[0] || '';
 
       const markdown = template
         .replace('[TITLE]', title)
