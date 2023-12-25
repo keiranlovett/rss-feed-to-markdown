@@ -60,6 +60,7 @@ async function run() {
         .replace('[THUMBNAIL]', thumbnail)
         .replace('[LINK]', link)
         .replace('[DATE]', formattedDate)
+        .replace('[PUBDATE]', formattedDate)
 
            
       
