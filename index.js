@@ -32,18 +32,20 @@ async function run() {
 
     // Parse the XML feed
     const feedData = await parseStringPromise(feedXml);
-    const entries = feedData?.feed?.item || [];
+    //const entries = feedData?.feed?.item || [];
+    const items = feedData?.rss?.channel.item || [];
+    console.log(`Feed items '${items}.length()' found.`);
 
     // Process the feed entries and generate Markdown files
-    entries.forEach((entry) => {
-      const title = entry.title?.[0]?.replace(/[^\w\s-]/g, '') || '';
+    items.forEach((item) => {
+      const title = item.title?.[0]?.replace(/[^\w\s-]/g, '') || '';
       //const description = entry['media:group']?.[0]?.['media:description']?.[0] || '';
-      const description = entry.description?.[0] || '';
+      const description = item.description?.[0] || '';
       //const id = entry['yt:videoId']?.[0] || '';
-      const thumbnail = entry.enclosure?.[0] || '';
-      const link = entry.link?.[0] || '';
-      const datepub = entry.datepub?.[0] || '';
-      const date = entry.datepub?.[0] || '';
+      const thumbnail = item.enclosure?.[0] || '';
+      const link = item.link?.[0] || '';
+      const datepub = item.datepub?.[0] || '';
+      const date = item.datepub?.[0] || '';
 
       const markdown = template
         .replace('[TITLE]', title)
