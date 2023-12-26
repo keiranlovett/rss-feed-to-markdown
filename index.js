@@ -32,21 +32,38 @@ async function run() {
 
     // Parse the XML feed
     const feedData = await parseStringPromise(feedXml);
-    const entries = feedData?.feed?.entry || [];
-
+    //const entries = feedData?.feed?.item || [];
+    //const entries = feedData?.feed?.entry || [];
+    const rss = feedData?.rss || [];
+    //const channel = feedData?.rss?.channel || [];
+    const items = feedData.rss.channel?.[0].item || [];
+    console.log(`Feed items found.`, items.length);
+    
     // Process the feed entries and generate Markdown files
-    entries.forEach((entry) => {
-      const title = entry.title?.[0]?.replace(/[^\w\s-]/g, '') || '';
-      const description = entry['media:group']?.[0]?.['media:description']?.[0] || '';
-      const id = entry['yt:videoId']?.[0] || '';
-      const date = entry.published?.[0] || '';
+    items.forEach((item) => {
+      const title = item.title?.[0]?.replace(/[^\w\s-]/g, '') || '';
+      //const description = entry['media:group']?.[0]?.['media:description']?.[0] || '';
+      const description = item.description?.[0]?.replace(/["']/g, '') || '';
+      //const id = entry['yt:videoId']?.[0] || '';
+      const thumbnail = item.enclosure?.[0].$.url || '';
+      const link = item.link?.[0] || '';
+      const datepub = item.pubDate?.[0] || '';
+      const date = item.pubDate?.[0] || '';
+
+      //console.log(`Date '${date}'`, Date.parse(date));     
+      const formattedDate = date ? new Date(Date.parse(date)).toISOString().split('T')[0] : '';
 
       const markdown = template
         .replace('[TITLE]', title)
         .replace('[DESCRIPTION]', description)
-        .replace('[ID]', id);
+        //.replace('[ID]', id)
+        .replace('[THUMBNAIL]', thumbnail)
+        .replace('[LINK]', link)
+        .replace('[ENCLOSURE]', thumbnail)
+        .replace('[DATE]', formattedDate)
+        .replace('[PUBDATE]', formattedDate)
 
-      const formattedDate = date ? new Date(date).toISOString().split('T')[0] : '';
+           
       
       const slug = sanitize(`${formattedDate}-${title.toLowerCase().replace(/\s+/g, '-')}`).substring(0, 50);
       const fileName = `${slug}.md`;
