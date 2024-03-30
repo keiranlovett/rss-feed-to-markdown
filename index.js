@@ -45,7 +45,7 @@ async function run() {
       //const description = entry['media:group']?.[0]?.['media:description']?.[0] || '';
       const description = item.description?.[0]?.replace(/["':]/g, '') || '';
       //const id = entry['yt:videoId']?.[0] || '';
-      const thumbnail = item.enclosure?.[0]?.$.url || '';
+      const thumbnail = item.enclosure?.[0]?.$?.url? || '';
       const link = item.link?.[0] || '';
       const datepub = item.pubDate?.[0] || '';
       const date = item.pubDate?.[0] || '';
