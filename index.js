@@ -46,6 +46,10 @@ async function run() {
       const description = item.description?.[0]?.replace(/["':]/g, '') || '';
       //const id = entry['yt:videoId']?.[0] || '';
       const thumbnail = item.enclosure?.[0]?.$?.url || '';
+      console.log(item.enclosure.[0].$.url);
+       console.log(item.enclosure?.[0].$.url);
+       console.log(item.enclosure?.[0]?.$.url);
+       console.log(item.enclosure?.[0]?.$?.url);
       const link = item.link?.[0] || '';
       const datepub = item.pubDate?.[0] || '';
       const date = item.pubDate?.[0] || '';
