@@ -46,9 +46,10 @@ async function run() {
       const description = item.description?.[0]?.replace(/["':]/g, '') || '';
       //const id = entry['yt:videoId']?.[0] || '';
 
+      const thumbnail = item.enclosure?[$][url] || '';
       //const thumbnail = item.enclosure?[0]?.$?.url || '';
       //const thumbnail = $(item).find('link[rel|="enclosure"]').attr('href') || '';
-      const thumbnail = item?.find("enclosure").attr('url') || '';
+      //const thumbnail = item?.find("enclosure").attr('url') || '';
       
       const link = item.link?.[0] || '';
       const datepub = item.pubDate?.[0] || '';
