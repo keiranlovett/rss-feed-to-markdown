@@ -54,10 +54,10 @@ async function run() {
         const thumbnail = item.enclosure[0].$.url ;
         console.log(item.enclosure[0].$.url );
       }
-      //catch{
+      catch(err){
         //const thumbnail = '';
         //console.log(item.enclosure[0].$.url || '');
-      //}
+      }
       //console.log(item.enclosure[0].$.url || '');
       //console.log(item.enclosure[0]?.$?.url || '');
       //console.log(item.enclosure ? (item.enclosure[0] ? item.enclosure[0].$.url : '' ) : '');
