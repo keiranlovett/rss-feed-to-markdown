@@ -43,7 +43,7 @@ async function run() {
     items.forEach((item) => {
       const title = "\""+item.title?.[0]?.replace(/[^\w\s-]/g, '') +"\"" || '';
       //const description = entry['media:group']?.[0]?.['media:description']?.[0] || '';
-      const description = "\""+(item.description?.[0]?.replace(/["':]/g, '')).replace(/&nbsp;/g, " ")+"\"" || '';
+      const description = "\""+(item.description?.[0]?.replace(/["':]/g, '')).replace(/&nbsp;/g, " ")+"...\"" || '';
       const author = item.author?.[0]?.replace(/["':]/g, '') || '';
       //const id = entry['yt:videoId']?.[0] || '';
 
