@@ -48,7 +48,7 @@ async function run() {
 
       //console.log(item.enclosure?.[$]?.[url]);
 
-      const thumbnail =   item.enclosure ? item.enclosure.$.url : '';
+      const thumbnail =   item.enclosure.[0] ? item.enclosure.[0].$.url : '';
       
       //const thumbnail = item.enclosure?.[$]?.[url] || '';
       //const thumbnail = item.enclosure?[0]?.$?.url || '';
