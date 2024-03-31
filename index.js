@@ -44,20 +44,20 @@ async function run() {
       const title = item.title?.[0]?.replace(/[^\w\s-]/g, '') || '';
       //const description = entry['media:group']?.[0]?.['media:description']?.[0] || '';
       const description = item.description?.[0]?.replace(/["':]/g, '') || '';
+      const author = item.author?.[0]?.replace(/["':]/g, '') || '';
       //const id = entry['yt:videoId']?.[0] || '';
 
-      //console.log(item.enclosure?.[$]?.[url]);
-
-      //const thumbnail =  item.enclosure?.[0]?.$.url || '';
-       thumbnail = '';
+      
+      thumbnail = '';
       try {
          thumbnail = item.enclosure[0].$.url ;
-        console.log(item.enclosure[0].$.url );
+         //console.log(item.enclosure[0].$.url );
       }
       catch(err){
         //const thumbnail = '';
         //console.log(item.enclosure[0].$.url || '');
       }
+      
       //console.log(item.enclosure[0].$.url || '');
       //console.log(item.enclosure[0]?.$?.url || '');
       //console.log(item.enclosure ? (item.enclosure[0] ? item.enclosure[0].$.url : '' ) : '');
@@ -78,6 +78,7 @@ async function run() {
       const markdown = template
         .replace('[TITLE]', title)
         .replace('[DESCRIPTION]', description)
+        .replace('[AUTHOR]', author)
         //.replace('[ID]', id)
         .replace('[THUMBNAIL]', thumbnail)
         .replace('[LINK]', link)
