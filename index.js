@@ -83,8 +83,8 @@ async function run() {
         console.log(summerize);
         console.log(link);
         console.log(urlreader.fetchURLContent(link));
-        console.log(fetchChatCompletion(urlreader.fetchURLContent(link) + " Summerize the above article in Markdown. "));
-        article = fetchChatCompletion(urlreader.fetchURLContent(link) + " Summerize the above article in Markdown. ");
+        console.log(chatGPT.fetchChatCompletion(urlreader.fetchURLContent(link) + " Summerize the above article in Markdown. "));
+        article = chatGPT.fetchChatCompletion(urlreader.fetchURLContent(link) + " Summerize the above article in Markdown. ");
         
       //}
 
