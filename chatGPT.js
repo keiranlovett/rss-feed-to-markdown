@@ -13,7 +13,6 @@ async function fetchChatCompletion(chatMessageContent) {
         const response = await axios.post(
             apiUrl,
             {
-                timeout: 60000,
                 messages: [
                     { role: 'system', content: chatMessageContent },
                 ],
@@ -26,7 +25,10 @@ async function fetchChatCompletion(chatMessageContent) {
                 },
             }
         );
-
+        if(response.status == 200){
+            // test for status you want, etc
+            console.log(response.status)
+        } 
         console.log('Chat completion response:', response.data.choices);
         return response.data.choices;
     } catch (error) {

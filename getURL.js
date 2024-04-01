@@ -3,19 +3,22 @@ const axios = require('axios');
 
 
 async function fetchURLContent(url) {
-    const article = '';
+    //const article = '';
     try {
         const response = await axios.get(url, {
-            timeout: 30000,
+            
             //We can add more configurations in this object
             params: {
             //This is one of the many options we can configure
             }
             });
-            
-        article= response.data;
+            if(response.status == 200){
+                // test for status you want, etc
+                console.log(response.status)
+            } 
+        //article= response.data;
         //article = new readability(article).parse();
-        return article.data;
+        return response.data;
     } catch (err) {
         console.log(err +" Error Parsing: " + url);
     }

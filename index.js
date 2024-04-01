@@ -7,6 +7,7 @@ const { parseStringPromise } = require('xml2js');
 const sanitize = require('sanitize-filename');
 const chatGPT = require("./chatGPT");
 const urlreader = require("./getURL");
+const readability = require('@mozilla/readability');
 
 async function run() {
   try {
@@ -79,12 +80,24 @@ async function run() {
       //console.log(`Date '${date}'`, Date.parse(date));     
       const formattedDate = date ? new Date(Date.parse(date)).toISOString().split('T')[0] : '';
 
-      //if (summerize == true) {
-        console.log(summerize);
-        console.log(link);
-        console.log(urlreader.fetchURLContent(link));
-        console.log(chatGPT.fetchChatCompletion(urlreader.fetchURLContent(link) + " Summerize the above article in Markdown. "));
-        article = chatGPT.fetchChatCompletion(urlreader.fetchURLContent(link) + " Summerize the above article in Markdown. ");
+      if (link == "https://thehackernews.com/2024/04/indian-government-rescues-250-citizens.html") {
+
+      article = urlreader.fetchURLContent(link)
+        .then(value => {
+          console.log(value);
+          return chatGPT.fetchChatCompletion(new readability(value).parse() + " Summerize the above article in Markdown.")
+        })
+        .then(anotherValue => {
+          console.log(anotherValue);
+          return anotherValue
+        })
+      }
+        //urlreader.fetchURLContent(link)
+        //console.log(summerize);
+        //console.log(link);
+        //console.log(urlreader.fetchURLContent(link));
+        //console.log(chatGPT.fetchChatCompletion(urlreader.fetchURLContent(link) + " Summerize the above article in Markdown. "));
+        //article =  + " Summerize the above article in Markdown. ");
         
       //}
 
