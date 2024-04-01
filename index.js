@@ -5,8 +5,8 @@ const path = require('path');
 const axios = require('axios');
 const { parseStringPromise } = require('xml2js');
 const sanitize = require('sanitize-filename');
-const chatGPT = require("./chatGPT");
-const urlreader = require("./getURL");
+//const chatGPT = require("./chatGPT");
+//const urlreader = require("./getURL");
 
 async function run() {
   try {
