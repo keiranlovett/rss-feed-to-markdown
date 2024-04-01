@@ -1,9 +1,9 @@
 const core = require('@actions/core');
 const axios = require('axios');
 
-const apiUrl = trim(core.getInput('OPENAI_apiUrl')|| 'https://api.openai.com/v1/chat/completions');
-const apiKey = trim(core.getInput('OPENAI_apiKey')|| '');
-const model = trim(core.getInput('OPENAI_model')|| 'gpt-3.5-turbo');
+const apiUrl = trim(core.getInput('OPENAI_apiUrl')) || 'https://api.openai.com/v1/chat/completions';
+const apiKey = trim(core.getInput('OPENAI_apiKey')) || '';
+const model = trim(core.getInput('OPENAI_model')) || 'gpt-3.5-turbo';
 
 //const apiUrl = trim(process.env.apiUrl || 'https://api.openai.com/v1/chat/completions');
 //const apiKey = trim(process.env.apiKey || ''); // @Please add here your openai key.
