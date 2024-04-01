@@ -82,15 +82,21 @@ async function run() {
 
       if (link == "https://thehackernews.com/2024/04/indian-government-rescues-250-citizens.html") {
 
-      article = urlreader.fetchURLContent(link)
-        .then(value => {
-          console.log(value);
-          return chatGPT.fetchChatCompletion(new readability(value).parse() + " Summerize the above article in Markdown.")
-        })
-        .then(anotherValue => {
-          console.log(anotherValue);
-          return anotherValue
-        })
+        article = urlreader.fetchURLContent(link)
+          .then(value => {
+            console.log(value);
+            return value
+          })
+      
+        article = new readability(article).parse();
+
+        article= article + " Summerize the above article in Markdown."
+
+        article= chatGPT.fetchChatCompletion(article)
+          .then(anotherValue => {
+            console.log(anotherValue);
+            return anotherValue
+          })
       }
         //urlreader.fetchURLContent(link)
         //console.log(summerize);
