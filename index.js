@@ -9,7 +9,7 @@ const chatGPT = require("./chatGPT");
 const urlreader = require("./getURL");
 const readabilitylib = require('@mozilla/readability');
 const Readability = readabilitylib.Readability;
-const JSDOMParser = readability.JSDOMParser; 
+const JSDOMParser = readabilitylib.JSDOMParser; 
 
 async function run() {
   try {
