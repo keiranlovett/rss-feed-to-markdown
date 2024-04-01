@@ -1,9 +1,9 @@
-const readability = require('@mozilla/readability');
-const axios = require('axios');
+//const readability = require('@mozilla/readability');
+//const axios = require('axios');
 
 
 async function fetchURLContent(url) {
-    const article = '';
+    //const article = '';
     //try {
     //    const response = await axios.get(url, {
     //        //We can add more configurations in this object
@@ -16,9 +16,9 @@ async function fetchURLContent(url) {
     //} catch (err) {
     //    console.log(err +" Error Parsing: " + url);
     //}
-    return article;
+    //return article;
 }
 
 module.exports = {
-    fetchURLContent
+    //fetchURLContent
 }
