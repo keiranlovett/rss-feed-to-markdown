@@ -12,12 +12,14 @@ async function fetchURLContent(url) {
             //This is one of the many options we can configure
             }
             });
+            
         article= response.data;
-        article = new readability(article).parse();
+        //article = new readability(article).parse();
+        return article.data;
     } catch (err) {
         console.log(err +" Error Parsing: " + url);
     }
-    return article;
+    
 }
 
 module.exports = {
