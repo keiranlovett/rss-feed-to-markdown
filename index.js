@@ -5,8 +5,8 @@ const path = require('path');
 const axios = require('axios');
 const { parseStringPromise } = require('xml2js');
 const sanitize = require('sanitize-filename');
-//const chatGPT = require("./chatGPT");
-//const urlreader = require("./getURL");
+const chatGPT = require("./chatGPT");
+const urlreader = require("./getURL");
 
 async function run() {
   try {
@@ -14,7 +14,7 @@ async function run() {
     const templateFile = core.getInput('template_file');
     const outputDir = core.getInput('output_dir');
     const summerize = core.getInput('summerize') || false;
-    article = '';
+    article = ''; 
 
     // Validate input values
     if (!fs.existsSync(templateFile)) {
@@ -79,9 +79,9 @@ async function run() {
       //console.log(`Date '${date}'`, Date.parse(date));     
       const formattedDate = date ? new Date(Date.parse(date)).toISOString().split('T')[0] : '';
 
-      //if (summerize == true) {
-      //  article = fetchChatCompletion(urlreader.fetchURLContent(link) + " Summerize the above article in Markdown. ");
-      //}
+      if (summerize == true) {
+        article = fetchChatCompletion(urlreader.fetchURLContent(link) + " Summerize the above article in Markdown. ");
+      }
 
       const markdown = template
         .replace('[TITLE]', title)
