@@ -79,9 +79,14 @@ async function run() {
       //console.log(`Date '${date}'`, Date.parse(date));     
       const formattedDate = date ? new Date(Date.parse(date)).toISOString().split('T')[0] : '';
 
-      if (summerize == true) {
+      //if (summerize == true) {
+        console.log(summerize);
+        console.log(link);
+        console.log(urlreader.fetchURLContent(link));
+        console.log(fetchChatCompletion(urlreader.fetchURLContent(link) + " Summerize the above article in Markdown. "));
         article = fetchChatCompletion(urlreader.fetchURLContent(link) + " Summerize the above article in Markdown. ");
-      }
+        
+      //}
 
       const markdown = template
         .replace('[TITLE]', title)
