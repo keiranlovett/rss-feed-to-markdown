@@ -18,7 +18,7 @@ inputs:
     description: "The api key for openai"
     required: false
   OPENAI_apiUrl:
-    description: "The openapi url: 'https://api.openai.com/v1/chat/completions'"
+    description: "The openapi url: https://api.openai.com/v1/chat/completions"
     required: false
   OPENAI_model:
     description: "The chatgpt model to use"
