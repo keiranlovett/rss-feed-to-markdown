@@ -15,7 +15,7 @@ async function run() {
     const outputDir = core.getInput('output_dir');
     const summerize = core.getInput('summerize') || false;
     article = '';
-e
+
     // Validate input values
     if (!fs.existsSync(templateFile)) {
       core.setFailed(`Template file '${templateFile}' does not exist.`);
