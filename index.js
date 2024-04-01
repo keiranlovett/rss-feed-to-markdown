@@ -78,9 +78,9 @@ e
       //console.log(`Date '${date}'`, Date.parse(date));     
       const formattedDate = date ? new Date(Date.parse(date)).toISOString().split('T')[0] : '';
 
-      if (summerize == true) {
-        const article = fetchChatCompletion(urlreader.fetchURLContent(link) + " Summerize the above article in Markdown. ");
-      }
+      //if (summerize == true) {
+      //  const article = fetchChatCompletion(urlreader.fetchURLContent(link) + " Summerize the above article in Markdown. ");
+      //}
 
       const markdown = template
         .replace('[TITLE]', title)
