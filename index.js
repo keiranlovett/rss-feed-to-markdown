@@ -14,7 +14,7 @@ async function run() {
     const templateFile = core.getInput('template_file');
     const outputDir = core.getInput('output_dir');
     const summerize = core.getInput('summerize') || false;
-    const article = '';
+    article = '';
 e
     // Validate input values
     if (!fs.existsSync(templateFile)) {
