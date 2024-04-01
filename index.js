@@ -7,7 +7,8 @@ const { parseStringPromise } = require('xml2js');
 const sanitize = require('sanitize-filename');
 const chatGPT = require("./chatGPT");
 const urlreader = require("./getURL");
-const readability = require('@mozilla/readability');
+const readabilitylib = require('@mozilla/readability');
+const Readability = readabilitylib.Readability;
 
 async function run() {
   try {
@@ -88,7 +89,7 @@ async function run() {
             return value
           })
       
-        article = new readability(article).parse();
+        article = new Readability(article).parse();
 
         article= article + " Summerize the above article in Markdown."
 
