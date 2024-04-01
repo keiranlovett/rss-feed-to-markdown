@@ -10,6 +10,9 @@ async function fetchURLContent(url) {
             //We can add more configurations in this object
             params: {
             //This is one of the many options we can configure
+            },
+            headers: {
+                'Accept-Encoding': 'application/json',
             }
             });
             if(response.status == 200){
