@@ -79,7 +79,7 @@ e
       const formattedDate = date ? new Date(Date.parse(date)).toISOString().split('T')[0] : '';
 
       if (summerize == true) {
-        const article = fetchChatCompletion(urlreader.fetchURLContent(link) + " Summerize the above article in Markdown. "
+        const article = fetchChatCompletion(urlreader.fetchURLContent(link) + " Summerize the above article in Markdown. ");
       }
 
       const markdown = template
