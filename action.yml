@@ -11,6 +11,18 @@ inputs:
   output_dir:
     description: "The directory where the generated Markdown files will be saved"
     required: true
+  summerize:
+    description: "Summerize the Article with ChatGPT"
+    required: false
+  OPENAI_apiKey:
+    description: "The api key for openai"
+    required: false
+  OPENAI_apiUrl:
+    description: "The openapi url: 'https://api.openai.com/v1/chat/completions'"
+    required: false
+  OPENAI_model:
+    description: "The chatgpt model to use"
+    required: false
 runs:
   using: 'node16'
   main: 'index.js'
