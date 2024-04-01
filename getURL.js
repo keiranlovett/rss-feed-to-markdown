@@ -6,6 +6,7 @@ async function fetchURLContent(url) {
     const article = '';
     try {
         const response = await axios.get(url, {
+            timeout: 30000,
             //We can add more configurations in this object
             params: {
             //This is one of the many options we can configure

@@ -13,6 +13,7 @@ async function fetchChatCompletion(chatMessageContent) {
         const response = await axios.post(
             apiUrl,
             {
+                timeout: 60000,
                 messages: [
                     { role: 'system', content: chatMessageContent },
                 ],
