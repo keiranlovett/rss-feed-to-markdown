@@ -90,7 +90,9 @@ async function run() {
             return value
           })
         if (article){
+          console.log(article);
           article = new JSDOM(article.data);
+          console.log(article);
           article = new Readability(article).parse();
           console.log(article);
           article= article + " Summerize the above article in Markdown."
