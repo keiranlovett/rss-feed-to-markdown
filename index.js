@@ -190,7 +190,7 @@ async function parseAll(link, filePath, replace) {//, file) {
       //console.log(article.content);
       //console.log(article.textContent);
       article=article + " Summerize the above article in Markdown."
-      console.log(article);
+      console.log(JSON.stringify(article));
       console.log(link, filePath, replace);
       const chatvar =  await  chatGPT.fetchChatCompletion(article)
         .then(anotherValue => {
