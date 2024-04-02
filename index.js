@@ -83,50 +83,6 @@ async function run() {
       //console.log(`Date '${date}'`, Date.parse(date));     
       const formattedDate = date ? new Date(Date.parse(date)).toISOString().split('T')[0] : '';
 
-      //if (link == "https://thehackernews.com/2024/04/indian-government-rescues-250-citizens.html") {
-      //  console.log("https://thehackernews.com/2024/04/indian-government-rescues-250-citizens.html");
-      //  console.log(link);
-
-      //  parseAll(link, filepath);
-      //}
-
-/** 
-        article = urlreader.fetchURLContent(link)
-          .then(value => {
-            console.log(value);
-            console.log(value.content);
-            return value
-          })
-        if (article){
-          //console.log(article);
-          article = new JSDOM(article);
-          //console.log(article);
-          article = new Readability(article.window.document).parse();
-          console.log(article.title);
-          console.log(article.content);
-          console.log(article.textContent);
-
-
-          article= article + " Summerize the above article in Markdown."
-
-          article= chatGPT.fetchChatCompletion(article)
-            .then(anotherValue => {
-              console.log(anotherValue);
-              return anotherValue
-            })
-        }
-      }
-      */
-
-        //urlreader.fetchURLContent(link)
-        //console.log(summerize);
-        //console.log(link);
-        //console.log(urlreader.fetchURLContent(link));
-        //console.log(chatGPT.fetchChatCompletion(urlreader.fetchURLContent(link) + " Summerize the above article in Markdown. "));
-        //article =  + " Summerize the above article in Markdown. ");
-        
-      //}
-
       const markdown = template
         .replace('[TITLE]', title)
         .replace('[DESCRIPTION]', description)
@@ -137,7 +93,7 @@ async function run() {
         .replace('[ENCLOSURE]', thumbnail)
         .replace('[DATE]', formattedDate)
         .replace('[PUBDATE]', formattedDate)
-        //.replace('[ARTICLE]', article)
+       
            
       
       const slug = sanitize(`${formattedDate}-${title.toLowerCase().replace(/\s+/g, '-')}`).substring(0, 50);
@@ -176,22 +132,22 @@ async function parseAll(link, filePath, replace) {//, file) {
   //add try statements
   const urlvar = await urlreader.fetchURLContent(link)
     .then(value => {
-      //(console.logvalue);
-      //console.log(value.content);
       return value
       }
     )
     if (urlvar){
       //readability
       article = new JSDOM(urlvar,{url: link});
-      //console.log(article);
       article = new Readability(article.window.document).parse();
-      //console.log(article.title);
-      //console.log(article.content);
       console.log(article.textContent);
-      article=article.textContent + " Summerize the above article in Markdown."
-      console.log(JSON.stringify(article));
-      console.log(link, filePath, replace);
+      article=article.textContent + ` As a professional summarizer, create a concise and comprehensive summary of the provided text, be it an article, post, conversation, or passage, while adhering to these guidelines:
+      1. Craft a summary that is detailed, thorough, in-depth, and complex, while maintaining clarity and conciseness.
+      2. Incorporate main ideas and essential information, eliminating extraneous language and focusing on critical aspects.
+      3. Rely strictly on the provided text, without including external information.
+      4. Format the summary in paragraph form for easy understanding.
+      5. Conclude your notes with [End of Notes, Message #X] to indicate completion, where "X" represents the total number of messages that I have sent. In other words, include a message counter where you start with #1 and add 1 to the message counter every time I send a message. 
+      6. Utilize markdown to cleanly format your output. Example: Bold key subject matter and potential areas that may need expanded information`
+
       const chatvar =  await  chatGPT.fetchChatCompletion(article)
         .then(anotherValue => {
           console.log(anotherValue);
@@ -200,8 +156,6 @@ async function parseAll(link, filePath, replace) {//, file) {
         )
         if (chatvar){
           //Write Values to md files
-          console.log(chatvar[0].message.content);
-          console.log(JSON.stringify(chatvar[0].message.content));
           WriteArticle(chatvar[0].message.content, filePath, replace);    
         }
     }
