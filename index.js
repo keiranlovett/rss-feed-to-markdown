@@ -172,7 +172,7 @@ function WriteArticle(article, filePath, replace ){
 }
 
 async function parseAll(link, filePath, replace) {//, file) {
-  console.log(link, filepath, replace);
+  console.log(link, filePath, replace);
   //add try statements
   const urlvar = await urlreader.fetchURLContent(link)
     .then(value => {
@@ -191,7 +191,7 @@ async function parseAll(link, filePath, replace) {//, file) {
       //console.log(article.textContent);
       article=article + " Summerize the above article in Markdown."
       console.log(article);
-      console.log(link, filepath, replace);
+      console.log(link, filePath, replace);
       const chatvar =  await  chatGPT.fetchChatCompletion(article)
         .then(anotherValue => {
           console.log(anotherValue);
