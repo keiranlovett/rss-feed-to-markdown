@@ -183,12 +183,12 @@ async function parseAll(link, filePath, replace) {//, file) {
     )
     if (urlvar){
       //readability
-      article = new JSDOM(urlvar);
+      article = new JSDOM(urlvar,{url: link});
       //console.log(article);
       article = new Readability(article.window.document).parse();
-      //console.log(article.title);
-      //console.log(article.content);
-      //console.log(article.textContent);
+      console.log(article.title);
+      console.log(article.content);
+      console.log(article.textContent);
       article=article + " Summerize the above article in Markdown."
       console.log(JSON.stringify(article));
       console.log(link, filePath, replace);
