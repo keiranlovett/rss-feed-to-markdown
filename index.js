@@ -199,7 +199,9 @@ async function parseAll(link, filePath, replace) {//, file) {
         )
         if (chatvar){
           //Write Values to md files
-          WriteArticle(chatvar, filePath, replace);    
+          console.log(chatvar[0].message.content);
+          console.log(JSON.stringify(chatvar[0].message.content));
+          WriteArticle(chatvar[0].message.content, filePath, replace);    
         }
     }
 }
