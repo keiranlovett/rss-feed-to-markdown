@@ -9,7 +9,6 @@ const chatGPT = require("./chatGPT");
 const urlreader = require("./getURL");
 const readabilitylib = require('@mozilla/readability');
 const Readability = readabilitylib.Readability;
-const { readability } = Readability.readability; 
 const jsdom = require("jsdom");
 const { JSDOM } = jsdom;
 
@@ -92,7 +91,7 @@ async function run() {
           })
         if (article){
           article = new JSDOM(article);
-          article = new readability(article).parse();
+          article = new Readability(article).parse();
           console.log(article);
           article= article + " Summerize the above article in Markdown."
 
