@@ -151,7 +151,7 @@ async function run() {
       if (link == "https://thehackernews.com/2024/04/indian-government-rescues-250-citizens.html") {
         console.log("https://thehackernews.com/2024/04/indian-government-rescues-250-citizens.html");
         console.log(link);
-        parseAll(link, filepath, '[ARTICLE]');
+        parseAll(link, filePath, '[ARTICLE]');
       }
 
 
@@ -162,7 +162,7 @@ async function run() {
 }
 
 
-function WriteArticle(article, filepath, replace ){
+function WriteArticle(article, filePath, replace ){
   const markdown = template
     .replace(replace, article)
 
@@ -170,7 +170,7 @@ function WriteArticle(article, filepath, replace ){
   console.log(`Markdown file '${filePath}' Updated`);
 }
 
-async function parseAll(link,filepath, replace) {//, file) {
+async function parseAll(link, filePath, replace) {//, file) {
 
   //add try statements
   const urlvar = urlreader.fetchURLContent(link)
@@ -197,7 +197,7 @@ async function parseAll(link,filepath, replace) {//, file) {
           }
         )
         //Write Values to md files
-        WriteArticle(chatvar, filepath);    }
+        WriteArticle(chatvar, filePath);    }
 }
 
 
