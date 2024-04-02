@@ -83,9 +83,14 @@ async function run() {
       //console.log(`Date '${date}'`, Date.parse(date));     
       const formattedDate = date ? new Date(Date.parse(date)).toISOString().split('T')[0] : '';
 
-      if (link == "https://thehackernews.com/2024/04/indian-government-rescues-250-citizens.html") {
-        console.log("https://thehackernews.com/2024/04/indian-government-rescues-250-citizens.html");
-        console.log(link);
+      //if (link == "https://thehackernews.com/2024/04/indian-government-rescues-250-citizens.html") {
+      //  console.log("https://thehackernews.com/2024/04/indian-government-rescues-250-citizens.html");
+      //  console.log(link);
+
+      //  parseAll(link, filepath);
+      //}
+
+/** 
         article = urlreader.fetchURLContent(link)
           .then(value => {
             console.log(value);
@@ -111,6 +116,8 @@ async function run() {
             })
         }
       }
+      */
+
         //urlreader.fetchURLContent(link)
         //console.log(summerize);
         //console.log(link);
@@ -130,7 +137,7 @@ async function run() {
         .replace('[ENCLOSURE]', thumbnail)
         .replace('[DATE]', formattedDate)
         .replace('[PUBDATE]', formattedDate)
-        .replace('[ARTICLE]', article)
+        //.replace('[ARTICLE]', article)
            
       
       const slug = sanitize(`${formattedDate}-${title.toLowerCase().replace(/\s+/g, '-')}`).substring(0, 50);
@@ -140,10 +147,61 @@ async function run() {
       fs.writeFileSync(filePath, markdown);
 
       console.log(`Markdown file '${filePath}' created.`);
+
+      if (link == "https://thehackernews.com/2024/04/indian-government-rescues-250-citizens.html") {
+        console.log("https://thehackernews.com/2024/04/indian-government-rescues-250-citizens.html");
+        console.log(link);
+        parseAll(link, filepath, '[ARTICLE]');
+      }
+
+
     });
   } catch (error) {
     core.setFailed(error.message);
   }
 }
+
+
+function WriteArticle(article, filepath){
+  const markdown = template
+    .replace('[ARTICLE]', article)
+
+  fs.writeFileSync(filePath, markdown);
+  console.log(`Markdown file '${filePath}' Updated`);
+}
+
+async function parseAll(link) {//, file) {
+
+  //add try statements
+  const urlvar = urlreader.fetchURLContent(link)
+    .then(value => {
+      console.log(value);
+      console.log(value.content);
+      return value
+      }
+    )
+    if (urlvar){
+      //readability
+      article = new JSDOM(urlvar);
+      //console.log(article);
+      article = new Readability(article.window.document).parse();
+      console.log(article.title);
+      console.log(article.content);
+      console.log(article.textContent);
+      article=article + " Summerize the above article in Markdown."
+      //
+      const chatvar= chatGPT.fetchChatCompletion(article)
+        .then(anotherValue => {
+          console.log(anotherValue);
+          return anotherValue
+          }
+        )
+        //Write Values to md files
+        WriteArticle(chatvar, filepath);    }
+}
+
+
+
+
 
 run();
