@@ -18,6 +18,16 @@ async function run() {
     const templateFile = core.getInput('template_file');
     const outputDir = core.getInput('output_dir');
     const summerize = core.getInput('summerize') || false;
+    const chatGPT_Prompt = core.getInput('chatGPT_Prompt') || ` As a professional summarizer, create a concise and comprehensive summary of the provided text, be it an article, post, conversation, or passage, while adhering to these guidelines:
+    1. Craft a summary that is detailed, thorough, in-depth, and complex, while maintaining clarity and conciseness.
+    2. Incorporate main ideas and essential information, eliminating extraneous language and focusing on critical aspects.
+    3. Rely strictly on the provided text for the summary without including external information.
+    4. Format the summary in paragraph form for easy understanding.
+    5. Utilize markdown to cleanly format your output. Example: Bold key subject matter and potential areas that may need expanded information
+    6. Append and provide 3-5 Links to URL relatedtopic, news articles, or relavant info.
+    7. Append a List of topics and categories relating to the above text
+    8. Include any geographic Location details at the begining. Example ATLANTA, GA - `;
+    
     article = ''; 
 
     // Validate input values
@@ -139,16 +149,8 @@ async function parseAll(link, filePath, replace) {//, file) {
       //readability
       article = new JSDOM(urlvar,{url: link});
       article = new Readability(article.window.document).parse();
-      console.log(article.textContent);
-      article=article.textContent + ` As a professional summarizer, create a concise and comprehensive summary of the provided text, be it an article, post, conversation, or passage, while adhering to these guidelines:
-      1. Craft a summary that is detailed, thorough, in-depth, and complex, while maintaining clarity and conciseness.
-      2. Incorporate main ideas and essential information, eliminating extraneous language and focusing on critical aspects.
-      3. Rely strictly on the provided text for the summary without including external information.
-      4. Format the summary in paragraph form for easy understanding.
-      5. Utilize markdown to cleanly format your output. Example: Bold key subject matter and potential areas that may need expanded information
-      6. Append a List of Links to related material, news articles, or relavant images.
-      7. Append a List of topics and categories relating to the above text
-      8. Include any geographic Location details at the begining. Example ATLANTA, GA - `
+      //console.log(article.textContent);
+      article=article.textContent + chatGPT_Prompt;
 
       const chatvar =  await  chatGPT.fetchChatCompletion(article)
         .then(anotherValue => {

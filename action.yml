@@ -23,6 +23,9 @@ inputs:
   OPENAI_model:
     description: "The chatgpt model to use"
     required: false
+  chatGPT_Prompt:
+    description: "The chatgpt prompt to use"
+    required: false
 runs:
   using: 'node16'
   main: 'index.js'
