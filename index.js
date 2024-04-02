@@ -163,9 +163,10 @@ async function run() {
 
 
 function WriteArticle(article, filePath, replace ){
-  const markdown = template
-    .replace(replace, article)
 
+  const filefs = fs.readFileSync(filePath, 'utf8');
+  const markdown = filefs
+    .replace(replace, article)
   fs.writeFileSync(filePath, markdown);
   console.log(`Markdown file '${filePath}' Updated`);
 }
