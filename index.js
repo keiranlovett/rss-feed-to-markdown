@@ -92,7 +92,7 @@ async function run() {
           console.log(article);
           article = cheerio.load(article);
           console.log(article);
-          article = new Readability(article).parse();
+          article = new Readability(article.html()).parse();
           console.log(article);
           article= article + " Summerize the above article in Markdown."
 
