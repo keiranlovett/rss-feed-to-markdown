@@ -29,8 +29,8 @@ async function fetchChatCompletion(chatMessageContent) {
             // test for status you want, etc
             console.log(response.status)
         } 
-        console.log('Chat completion response:', response.data.choices);
-        return response.data.choices;
+        //console.log('Chat completion response:', response.data.choices);
+        return response.data.content;
     } catch (error) {
         console.error('Error:', error.response.data);
     }
