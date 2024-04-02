@@ -176,8 +176,8 @@ async function parseAll(link, filePath, replace) {//, file) {
   //add try statements
   const urlvar = urlreader.fetchURLContent(link)
     .then(value => {
-      console.log(value);
-      console.log(value.content);
+      //console.log(value);
+      //console.log(value.content);
       return value
       }
     )
@@ -186,9 +186,9 @@ async function parseAll(link, filePath, replace) {//, file) {
       article = new JSDOM(urlvar);
       //console.log(article);
       article = new Readability(article.window.document).parse();
-      console.log(article.title);
-      console.log(article.content);
-      console.log(article.textContent);
+      //console.log(article.title);
+      //console.log(article.content);
+      //console.log(article.textContent);
       article=article + " Summerize the above article in Markdown."
       //
       const chatvar= chatGPT.fetchChatCompletion(article)
@@ -197,8 +197,11 @@ async function parseAll(link, filePath, replace) {//, file) {
           return anotherValue
           }
         )
-        //Write Values to md files
-        WriteArticle(chatvar, filePath);    }
+        if (chatvar){
+          //Write Values to md files
+          WriteArticle(chatvar, filePath, replace);    
+        }
+    }
 }
 
 
