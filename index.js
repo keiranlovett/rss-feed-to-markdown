@@ -115,11 +115,11 @@ async function run() {
 
       console.log(`Markdown file '${filePath}' created.`);
 
-      //if (link == "https://thehackernews.com/2024/04/indian-government-rescues-250-citizens.html") {
-      //  console.log("https://thehackernews.com/2024/04/indian-government-rescues-250-citizens.html");
-      //  console.log(link);
+      if (link == "https://thehackernews.com/2024/04/indian-government-rescues-250-citizens.html") {
+        console.log("https://thehackernews.com/2024/04/indian-government-rescues-250-citizens.html");
+        console.log(link);
         parseAll(link, filePath, '[ARTICLE]');
-      //}
+      }
 
 
     });
