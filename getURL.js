@@ -12,7 +12,8 @@ async function fetchURLContent(url) {
             //This is one of the many options we can configure
             },
             headers: {
-                'Accept-Encoding': 'application/json',
+                'Accept-Encoding': 'gzip',
+                //'Accept-Encoding': 'application/json',
             }
             });
             if(response.status == 200){
