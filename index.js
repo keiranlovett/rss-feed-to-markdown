@@ -143,10 +143,12 @@ async function parseAll(link, filePath, replace) {//, file) {
       article=article.textContent + ` As a professional summarizer, create a concise and comprehensive summary of the provided text, be it an article, post, conversation, or passage, while adhering to these guidelines:
       1. Craft a summary that is detailed, thorough, in-depth, and complex, while maintaining clarity and conciseness.
       2. Incorporate main ideas and essential information, eliminating extraneous language and focusing on critical aspects.
-      3. Rely strictly on the provided text, without including external information.
+      3. Rely strictly on the provided text for the summary without including external information.
       4. Format the summary in paragraph form for easy understanding.
-      5. Conclude your notes with [End of Notes, Message #X] to indicate completion, where "X" represents the total number of messages that I have sent. In other words, include a message counter where you start with #1 and add 1 to the message counter every time I send a message. 
-      6. Utilize markdown to cleanly format your output. Example: Bold key subject matter and potential areas that may need expanded information`
+      5. Utilize markdown to cleanly format your output. Example: Bold key subject matter and potential areas that may need expanded information
+      6. Append a List of Links to related material, news articles, or relavant images.
+      7. Append a List of topics and categories relating to the above text
+      8. Include any geographic Location details at the begining. Example ATLANTA, GA - `
 
       const chatvar =  await  chatGPT.fetchChatCompletion(article)
         .then(anotherValue => {
