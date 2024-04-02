@@ -12,7 +12,7 @@ async function fetchURLContent(url) {
             //This is one of the many options we can configure
             },
             headers: {
-                'Accept-Encoding': 'gzip',
+                'Accept-Encoding': 'application/xml',
                 //'Accept-Encoding': 'application/json',
             }
             });

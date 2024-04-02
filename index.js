@@ -9,8 +9,7 @@ const chatGPT = require("./chatGPT");
 const urlreader = require("./getURL");
 const readabilitylib = require('@mozilla/readability');
 const Readability = readabilitylib.Readability;
-const jsdom = require("jsdom");
-const { JSDOM } = jsdom;
+const cheerio = require('cheerio');
 
 async function run() {
   try {
@@ -91,7 +90,7 @@ async function run() {
           })
         if (article){
           console.log(article);
-          article = new JSDOM(article.data);
+          article = cheerio.load(article.data);
           console.log(article);
           article = new Readability(article).parse();
           console.log(article);
