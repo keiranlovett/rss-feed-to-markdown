@@ -87,7 +87,7 @@ async function run() {
         article = urlreader.fetchURLContent(link)
           .then(value => {
             //console.log(value);
-            return value.data
+            return value
           })
         if (article){
           //console.log(article);
