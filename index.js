@@ -17,9 +17,9 @@ const chatGPT_Prompt = core.getInput('chatGPT_Prompt') || ` As a professional su
     3. Rely strictly on the provided text for the summary without including external information.
     4. Format the summary in paragraph form for easy understanding.
     5. Utilize markdown to cleanly format your output. Example: Bold key subject matter and potential areas that may need expanded information
-    6. Append and provide 3-5 Links to URL related topics, news articles, or relavant info.
+    6. Append and provide 3-5 Links to URL for related topics, news articles, or relavant info.
     7. Append a List of topics and categories relating to the above text
-    8. Include any geographic Location details at the begining. Example ATLANTA, GA - `;
+    8. Include any geographic Location details at the begining. Example Toronto, ON - `;
 
 
 async function run() {
@@ -151,7 +151,7 @@ async function parseAll(link, filePath, replace) {//, file) {
       article = new JSDOM(urlvar,{url: link});
       article = new Readability(article.window.document).parse();
       //console.log(article.textContent);
-      article=article.textContent + " " + chatGPT_Prompt;
+      article=article.textContent + " " + chatGPT_Prompt + " Include both a reference and add a related url for " + link 
 
       const chatvar =  await  chatGPT.fetchChatCompletion(article)
         .then(anotherValue => {
