@@ -21,7 +21,7 @@ async function fetchURLContent(url) {
             } 
         //article= response.data;
         //article = new readability(article).parse();
-        return response.data;
+        return response;
     } catch (err) {
         console.log(err +" Error Parsing: " + url);
     }
