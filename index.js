@@ -11,14 +11,7 @@ const readabilitylib = require('@mozilla/readability');
 const Readability = readabilitylib.Readability;
 const jsdom = require("jsdom");
 const { JSDOM } = jsdom;
-
-async function run() {
-  try {
-    const feedUrl = core.getInput('feed_url');
-    const templateFile = core.getInput('template_file');
-    const outputDir = core.getInput('output_dir');
-    const summerize = core.getInput('summerize') || false;
-    const chatGPT_Prompt = core.getInput('chatGPT_Prompt') || ` As a professional summarizer, create a concise and comprehensive summary of the provided text, be it an article, post, conversation, or passage, while adhering to these guidelines:
+const chatGPT_Prompt = core.getInput('chatGPT_Prompt') || ` As a professional summarizer, create a concise and comprehensive summary of the provided text, be it an article, post, conversation, or passage, while adhering to these guidelines:
     1. Craft a summary that is detailed, thorough, in-depth, and complex, while maintaining clarity and conciseness.
     2. Incorporate main ideas and essential information, eliminating extraneous language and focusing on critical aspects.
     3. Rely strictly on the provided text for the summary without including external information.
@@ -28,6 +21,14 @@ async function run() {
     7. Append a List of topics and categories relating to the above text
     8. Include any geographic Location details at the begining. Example ATLANTA, GA - `;
 
+
+async function run() {
+  try {
+    const feedUrl = core.getInput('feed_url');
+    const templateFile = core.getInput('template_file');
+    const outputDir = core.getInput('output_dir');
+    const summerize = core.getInput('summerize') || false;
+    
     article = ''; 
 
     // Validate input values
@@ -150,7 +151,7 @@ async function parseAll(link, filePath, replace) {//, file) {
       article = new JSDOM(urlvar,{url: link});
       article = new Readability(article.window.document).parse();
       //console.log(article.textContent);
-      article=article.textContent + chatGPT_Prompt;
+      article=article.textContent + " " + chatGPT_Prompt;
 
       const chatvar =  await  chatGPT.fetchChatCompletion(article)
         .then(anotherValue => {
