@@ -139,8 +139,8 @@ async function parseAll(link, filePath, replace) {//, file) {
       //readability
       article = new JSDOM(urlvar,{url: link});
       article = new Readability(article.window.document).parse();
-      console.log(article.Content);
-      article=article.Content + ` As a professional summarizer, create a concise and comprehensive summary of the provided text, be it an article, post, conversation, or passage, while adhering to these guidelines:
+      console.log(article.textContent);
+      article=article.textContent + ` As a professional summarizer, create a concise and comprehensive summary of the provided text, be it an article, post, conversation, or passage, while adhering to these guidelines:
       1. Craft a summary that is detailed, thorough, in-depth, and complex, while maintaining clarity and conciseness.
       2. Incorporate main ideas and essential information, eliminating extraneous language and focusing on critical aspects.
       3. Rely strictly on the provided text for the summary without including external information.
