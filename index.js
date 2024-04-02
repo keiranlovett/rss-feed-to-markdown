@@ -162,15 +162,15 @@ async function run() {
 }
 
 
-function WriteArticle(article, filepath){
+function WriteArticle(article, filepath, replace ){
   const markdown = template
-    .replace('[ARTICLE]', article)
+    .replace(replace, article)
 
   fs.writeFileSync(filePath, markdown);
   console.log(`Markdown file '${filePath}' Updated`);
 }
 
-async function parseAll(link) {//, file) {
+async function parseAll(link,filepath, replace) {//, file) {
 
   //add try statements
   const urlvar = urlreader.fetchURLContent(link)
