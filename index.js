@@ -84,22 +84,22 @@ async function run() {
       //console.log(`Date '${date}'`, Date.parse(date));     
       const formattedDate = date ? new Date(Date.parse(date)).toISOString().split('T')[0] : '';
 
-      if (link == "https://thehackernews.com/2024/04/indian-government-rescues-250-citizens.html") {
-
+      if (link) {
         article = urlreader.fetchURLContent(link)
           .then(value => {
             console.log(value);
             return value
           })
-        
-        article = new JSDOM(article);
-        article= article + " Summerize the above article in Markdown."
+        if (article){}
+          article = new JSDOM(article);
+          article= article + " Summerize the above article in Markdown."
 
-        article= chatGPT.fetchChatCompletion(article)
-          .then(anotherValue => {
-            console.log(anotherValue);
-            return anotherValue
-          })
+          article= chatGPT.fetchChatCompletion(article)
+            .then(anotherValue => {
+              console.log(anotherValue);
+              return anotherValue
+            })
+        }
       }
         //urlreader.fetchURLContent(link)
         //console.log(summerize);
