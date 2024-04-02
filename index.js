@@ -86,11 +86,11 @@ async function run() {
         article = urlreader.fetchURLContent(link)
           .then(value => {
             //console.log(value);
-            return value
+            return value.data
           })
         if (article){
           console.log(article);
-          article = cheerio.load(article.data);
+          article = cheerio.load(article);
           console.log(article);
           article = new Readability(article).parse();
           console.log(article);
