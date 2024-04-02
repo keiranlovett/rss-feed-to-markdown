@@ -84,7 +84,7 @@ async function run() {
       //console.log(`Date '${date}'`, Date.parse(date));     
       const formattedDate = date ? new Date(Date.parse(date)).toISOString().split('T')[0] : '';
 
-      if (link) {
+      if (link == "https://thehackernews.com/2024/04/indian-government-rescues-250-citizens.html") {
         article = urlreader.fetchURLContent(link)
           .then(value => {
             //console.log(value);
