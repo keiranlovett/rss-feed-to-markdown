@@ -30,7 +30,7 @@ async function fetchChatCompletion(chatMessageContent) {
             console.log(response.status)
         } 
         //console.log('Chat completion response:', response.data.choices);
-        return response.data.choices;
+        return response.data.choices.message.content;
     } catch (error) {
         console.error('Error:', error.response.data);
     }

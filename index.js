@@ -90,11 +90,15 @@ async function run() {
             return value.data
           })
         if (article){
-          console.log(article);
+          //console.log(article);
           article = new JSDOM(article);
-          console.log(article);
+          //console.log(article);
           article = new Readability(article.window.document).parse();
-          console.log(article);
+          console.log(article.title);
+          console.log(article.content);
+          console.log(article.textContent);
+
+
           article= article + " Summerize the above article in Markdown."
 
           article= chatGPT.fetchChatCompletion(article)
