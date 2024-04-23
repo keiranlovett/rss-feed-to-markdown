@@ -45,7 +45,7 @@ async function run() {
         .replaceAll('[TITLE]', title)
         .replaceAll('[DESCRIPTION]', description)
         .replaceAll('[ID]', id)
-        .replaceAll('[DATE], date);
+        .replaceAll('[DATE]', date);
 
       const formattedDate = date ? new Date(date).toISOString().split('T')[0] : '';
       
