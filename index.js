@@ -42,9 +42,10 @@ async function run() {
       const date = entry.published?.[0] || '';
 
       const markdown = template
-        .replace('[TITLE]', title)
-        .replace('[DESCRIPTION]', description)
-        .replace('[ID]', id);
+        .replaceAll('[TITLE]', title)
+        .replaceAll('[DESCRIPTION]', description)
+        .replaceAll('[ID]', id)
+        .replaceAll('[DATE], date);
 
       const formattedDate = date ? new Date(date).toISOString().split('T')[0] : '';
       
