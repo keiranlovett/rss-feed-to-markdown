@@ -43,7 +43,7 @@ async function run() {
       const title = entry.title?.[0]?.replace(/[^\w\s-]/g, '') || '';
       const content = entry.description?.[0] || entry['media:group']?.[0]?.['media:description']?.[0] || entry.content?.[0]?.['_'] || '';
       const markdown = new TurndownService().turndown(content);
-      const description = content.replace(/(<([^>]+)>)/gi, "").split(" ").splice(0, 50).join(" ");
+      const description = entry.summary?.[0] || content.replace(/(<([^>]+)>)/gi, "").split(" ").splice(0, 50).join(" ");
       const author = entry.author?.[0]?.name?.[0] || entry['dc:creator']?.[0] || '';
       const video = entry['media:group']?.[0]?.['media:content']?.[0]?.$?.url || '';
       const thumbnail = entry['media:group']?.[0]?.['media:thumbnail']?.[0]?.$.url || '';
