@@ -46,7 +46,7 @@ jobs:
 
 1. Create a new Markdown file named template.md.
 2. Customize the template to fit your desired output format. You can use Markdown syntax and add placeholders for dynamic content.
-3. Identify the parts of the template that you want to be replaced with actual values from the RSS feed entries. Placeholders include `[ID]`, `[DATE]`, `[LINK]`, `[TITLE]`, `[DESCRIPTION]`, `[CONTENT]`, `[MARKDOWN]`, `[AUTHOR]`, `[VIDEO]`, `[THUMBNAIL]`, `[CATEGORIES]`, `[VIEWS]`, `[RATING]`.
+3. Identify the parts of the template that you want to be replaced with actual values from the RSS feed entries. Placeholders include `[ID]`, `[DATE]`, `[LINK]`, `[TITLE]`, `[DESCRIPTION]`, `[CONTENT]`, `[MARKDOWN]`, `[AUTHOR]`, `[VIDEO]`, `[IMAGE]`, `[CATEGORIES]`, `[VIEWS]`, `[RATING]`.
 4. Replace the corresponding parts in the template with the desired placeholders. For example:
 
 ```markdown

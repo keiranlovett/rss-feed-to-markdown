@@ -46,7 +46,7 @@ async function run() {
       const description = entry.summary?.[0] || content.replace(/(<([^>]+)>)/gi, "").split(" ").splice(0, 50).join(" ") || '';
       const author = entry.author?.[0]?.name?.[0] || entry['dc:creator']?.[0] || '';
       const video = entry['media:group']?.[0]?.['media:content']?.[0]?.$?.url || '';
-      const thumbnail = entry['media:group']?.[0]?.['media:thumbnail']?.[0]?.$.url || '';
+      const image = entry['media:group']?.[0]?.['media:thumbnail']?.[0]?.$.url || '';
       const categories = entry.category || [];
       const views = entry['media:group']?.[0]?.['media:community']?.[0]?.['media:statistics']?.[0]?.$.views || '';
       const rating = entry['media:group']?.[0]?.['media:community']?.[0]?.['media:starRating']?.[0]?.$.average || '';
@@ -61,7 +61,7 @@ async function run() {
         .replaceAll('[MARKDOWN]', markdown)
         .replaceAll('[AUTHOR]', author)
         .replaceAll('[VIDEO]', video)
-        .replaceAll('[THUMBNAIL]', thumbnail)
+        .replaceAll('[IMAGE]', image)
         .replaceAll('[CATEGORIES]', categories.join(', '))
         .replaceAll('[VIEWS]', views)
         .replaceAll('[RATING]', rating);
