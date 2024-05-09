@@ -62,7 +62,7 @@ async function run() {
         .replaceAll('[AUTHOR]', author)
         .replaceAll('[VIDEO]', video)
         .replaceAll('[IMAGE]', image)
-        .replaceAll('[CATEGORIES]', categories.join(', '))
+        .replaceAll('[CATEGORIES]', categories.join(','))
         .replaceAll('[VIEWS]', views)
         .replaceAll('[RATING]', rating);
 
