@@ -56,7 +56,7 @@ async function run() {
         .replaceAll('[DATE]', date)
         .replaceAll('[LINK]', link)
         .replaceAll('[TITLE]', title.replace(/\s+/g, ' ').trim())
-        .replaceAll('[DESCRIPTION]', description.replace(/\s+/g, ' ').replaceAll(':','').trim())
+        .replaceAll('[DESCRIPTION]', description.replace(/\s+/g, ' ').replaceAll(':','').replaceAll('@','\@').replaceAll('#','\#').trim())
         .replaceAll('[CONTENT]', content)
         .replaceAll('[MARKDOWN]', markdown)
         .replaceAll('[AUTHOR]', author)
