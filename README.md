@@ -54,7 +54,8 @@ jobs:
 title: [TITLE]
 date: [DATE]
 keywords: [CATEGORIES]
-description: [DESCRIPTION]
+description: >
+  [DESCRIPTION]
 ---
 # [TITLE]
 ##### [AUTHOR]
