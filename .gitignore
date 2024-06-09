@@ -39,7 +39,7 @@ bower_components
 build/Release
 
 # Dependency directories
-node_modules/
+# node_modules/
 jspm_packages/
 
 # Snowpack dependency directory (https://snowpack.dev/)
@@ -129,4 +129,11 @@ dist
 .yarn/install-state.gz
 .pnp.*
 
+#ds store
+.DS_Store
+._.DS_Store
+**/.DS_Store
+**/._.DS_Store
+
+# vs code
 *.code-workspace

@@ -5,6 +5,7 @@ const path = require('path');
 const axios = require('axios');
 const { parseStringPromise } = require('xml2js');
 const sanitize = require('sanitize-filename');
+const TurndownService = require('turndown');
 
 async function run() {
   try {
@@ -40,24 +41,28 @@ async function run() {
       const date = entry.published?.[0] || entry.pubDate?.[0] || entry.updated?.[0] || '';
       const link = entry.link?.[0]?.$?.href || entry.link?.[0] || '';
       const title = entry.title?.[0]?.replace(/[^\w\s-]/g, '') || '';
-      const description = entry.description?.[0] || entry['media:group']?.[0]?.['media:description']?.[0] || entry.content?.[0]?.['_'] || '';
+      const content = entry.description?.[0] || entry['media:group']?.[0]?.['media:description']?.[0] || entry.content?.[0]?.['_'] || '';
+      const markdown = new TurndownService({codeBlockStyle: 'fenced', fenced: '```', bulletListMarker: '-'}).turndown(content);
+      const description = entry.summary?.[0] || content.replace(/(<([^>]+)>)/gi, "").split(" ").splice(0, 50).join(" ") || '';
       const author = entry.author?.[0]?.name?.[0] || entry['dc:creator']?.[0] || '';
       const video = entry['media:group']?.[0]?.['media:content']?.[0]?.$?.url || '';
-      const thumbnail = entry['media:group']?.[0]?.['media:thumbnail']?.[0]?.$.url || '';
+      const image = entry['media:group']?.[0]?.['media:thumbnail']?.[0]?.$.url || '';
       const categories = entry.category || [];
       const views = entry['media:group']?.[0]?.['media:community']?.[0]?.['media:statistics']?.[0]?.$.views || '';
       const rating = entry['media:group']?.[0]?.['media:community']?.[0]?.['media:starRating']?.[0]?.$.average || '';
 
-      const markdown = template
+      const output = template
         .replaceAll('[ID]', id)  
         .replaceAll('[DATE]', date)
         .replaceAll('[LINK]', link)
-        .replaceAll('[TITLE]', title)
-        .replaceAll('[DESCRIPTION]', description)
+        .replaceAll('[TITLE]', title.replace(/\s+/g, ' ').trim())
+        .replaceAll('[DESCRIPTION]', description.replace(/\s+/g, ' ').trim())
+        .replaceAll('[CONTENT]', content)
+        .replaceAll('[MARKDOWN]', markdown)
         .replaceAll('[AUTHOR]', author)
         .replaceAll('[VIDEO]', video)
-        .replaceAll('[THUMBNAIL]', thumbnail)
-        .replaceAll('[CATEGORIES]', categories.join(', '))
+        .replaceAll('[IMAGE]', image)
+        .replaceAll('[CATEGORIES]', categories.join(','))
         .replaceAll('[VIEWS]', views)
         .replaceAll('[RATING]', rating);
 
@@ -67,11 +72,12 @@ async function run() {
       const fileName = `${slug}.md`;
       const filePath = path.join(outputDir, fileName);
 
-      fs.writeFileSync(filePath, markdown);
+      fs.writeFileSync(filePath, output);
 
       console.log(`Markdown file '${filePath}' created.`);
     });
-  } catch (error) {
+  } 
+  catch (error) {
     core.setFailed(error.message);
   }
 }
