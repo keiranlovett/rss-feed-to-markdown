@@ -1,14 +1,12 @@
 const core = require('@actions/core');
 const github = require('@actions/github');
+const { fetchAndParseFeed, generateMarkdown, saveMarkdown } = require('./process');
 const fs = require('fs');
-const path = require('path');
-const axios = require('axios');
-const { parseStringPromise } = require('xml2js');
-const sanitize = require('sanitize-filename');
-const TurndownService = require('turndown');
 
 async function run() {
   try {
+
+    //node index.js feed_url= template_file= output_dir=test
     const feedUrl = core.getInput('feed_url');
     const templateFile = core.getInput('template_file');
     const outputDir = core.getInput('output_dir');
@@ -26,53 +24,17 @@ async function run() {
 
     // Read the template file
     const template = fs.readFileSync(templateFile, 'utf8');
+    
+    // Fetch and parse the RSS feed
+    const feedData = await fetchAndParseFeed(feedUrl);
 
-    // Fetch the RSS feed
-    const response = await axios.get(feedUrl);
-    const feedXml = response.data;
-
-    // Parse the XML feed
-    const feedData = await parseStringPromise(feedXml);
     const entries = feedData?.feed?.entry || feedData?.rss?.channel?.[0]?.item || [];
 
     // Process the feed entries and generate Markdown files
     entries.forEach((entry) => {
-      const id = entry['yt:videoId']?.[0] || entry['id']?.[0] || entry.guid?.[0]?.['_'] || entry.guid?.[0] || '';
-      const date = entry.published?.[0] || entry.pubDate?.[0] || entry.updated?.[0] || '';
-      const link = entry.link?.[0]?.$?.href || entry.link?.[0] || '';
-      const title = entry.title?.[0]?.replace(/[^\w\s-]/g, '') || '';
-      const content = entry.description?.[0] || entry['media:group']?.[0]?.['media:description']?.[0] || entry.content?.[0]?.['_'] || '';
-      const markdown = new TurndownService({codeBlockStyle: 'fenced', fenced: '```', bulletListMarker: '-'}).turndown(content);
-      const description = entry.summary?.[0] || content.replace(/(<([^>]+)>)/gi, "").split(" ").splice(0, 50).join(" ") || '';
-      const author = entry.author?.[0]?.name?.[0] || entry['dc:creator']?.[0] || '';
-      const video = entry['media:group']?.[0]?.['media:content']?.[0]?.$?.url || '';
-      const image = entry['media:group']?.[0]?.['media:thumbnail']?.[0]?.$.url || '';
-      const categories = entry.category || [];
-      const views = entry['media:group']?.[0]?.['media:community']?.[0]?.['media:statistics']?.[0]?.$.views || '';
-      const rating = entry['media:group']?.[0]?.['media:community']?.[0]?.['media:starRating']?.[0]?.$.average || '';
-
-      const output = template
-        .replaceAll('[ID]', id)  
-        .replaceAll('[DATE]', date)
-        .replaceAll('[LINK]', link)
-        .replaceAll('[TITLE]', title.replace(/\s+/g, ' ').trim())
-        .replaceAll('[DESCRIPTION]', description.replace(/\s+/g, ' ').trim())
-        .replaceAll('[CONTENT]', content)
-        .replaceAll('[MARKDOWN]', markdown)
-        .replaceAll('[AUTHOR]', author)
-        .replaceAll('[VIDEO]', video)
-        .replaceAll('[IMAGE]', image)
-        .replaceAll('[CATEGORIES]', categories.join(','))
-        .replaceAll('[VIEWS]', views)
-        .replaceAll('[RATING]', rating);
-
-      const formattedDate = date ? new Date(date).toISOString().split('T')[0] : '';
       
-      const slug = sanitize(`${formattedDate}-${title.toLowerCase().replace(/\s+/g, '-')}`).substring(0, 50);
-      const fileName = `${slug}.md`;
-      const filePath = path.join(outputDir, fileName);
-
-      fs.writeFileSync(filePath, output);
+      const { output, date, title } = generateMarkdown(template, entry);
+      const filePath = saveMarkdown(outputDir, date, title, output);
 
       console.log(`Markdown file '${filePath}' created.`);
     });
