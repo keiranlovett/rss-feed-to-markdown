@@ -1,0 +1,10 @@
+# [TITLE]
+**Link:** [LINK]
+**Description:** [DESCRIPTION]
+**Author:** [AUTHOR]
+**Published Date:** [DATE]
+**Video:** [VIDEO]
+**Thumbnail:** ![Thumbnail]([IMAGE])
+**Categories:** [CATEGORIES]
+**Views:** [VIEWS]
+**Rating:** [RATING]
