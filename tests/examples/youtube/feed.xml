@@ -1,0 +1,36 @@
+<feed xmlns:yt="http://www.youtube.com/xml/schemas/2015" xmlns:media="http://search.yahoo.com/mrss/" xmlns="http://www.w3.org/2005/Atom">
+  <link rel="self" href="http://www.youtube.com/feeds/videos.xml?channel_id=UCuVczNc74_jsmgNlAhHbz-Q"/>
+  <id>yt:channel:uVczNc74_jsmgNlAhHbz-Q</id>
+  <yt:channelId>uVczNc74_jsmgNlAhHbz-Q</yt:channelId>
+  <title>My Channel</title>
+  <link rel="alternate" href="https://www.youtube.com/channel/UCuVczNc74_jsmgNlAhHbz-Q"/>
+  <author>
+    <name>Keiran Lovett</name>
+    <uri>https://www.youtube.com/channel/UCuVczNc74_jsmgNlAhHbz-Q</uri>
+  </author>
+  <published>2020-03-05T15:05:39+00:00</published>
+  <entry>
+    <id>yt:video:4BxrfhUwldc</id>
+    <yt:videoId>4BxrfhUwldc</yt:videoId>
+    <yt:channelId>UCuVczNc74_jsmgNlAhHbz-Q</yt:channelId>
+    <title>My Title</title>
+    <link rel="alternate" href="https://www.youtube.com/watch?v=4BxrfhUwldc"/>
+    <author>
+      <name>Keiran Lovett</name>
+      <uri>https://www.youtube.com/channel/UCuVczNc74_jsmgNlAhHbz-Q</uri>
+    </author>
+    <published>2024-05-10T09:21:26+00:00</published>
+    <updated>2024-05-16T18:35:53+00:00</updated>
+    <media:group>
+      <media:title>My Title</media:title>
+      <media:content url="https://www.youtube.com/v/4BxrfhUwldc?version=3" type="application/x-shockwave-flash" width="640" height="390"/>
+      <media:thumbnail url="https://i1.ytimg.com/vi/4BxrfhUwldc/hqdefault.jpg" width="480" height="360"/>
+      <media:description>My description here</media:description>
+      <media:community>
+        <media:starRating count="2" average="5.00" min="1" max="5"/>
+        <media:statistics views="48"/>
+      </media:community>
+    </media:group>
+  </entry>
+  <!-- Additional entries -->
+</feed>
