@@ -40,8 +40,6 @@ jobs:
           output_dir: '_posts/events/'
 ```
 
-> Please note that you need to replace 'https://www.example.com/rss-feed.xml' with the actual URL of the RSS feed you want to convert, 'path/to/template.md' with the path to your template file, and 'path/to/output' with the desired output directory path.
-
 ## Template File
 
 1. Create a new Markdown file named template.md.
