@@ -2,7 +2,7 @@
 
 This GitHub Action converts RSS feed entries to Markdown files. It fetches the RSS feed, extracts relevant information from each entry, and generates Markdown files using a provided template.
 
-## Inputs
+## Input Variables
 
 - `feed_url` (required): The URL of the RSS feed.
 - `template_file` (required): The path to the template file.
@@ -53,6 +53,7 @@ id: [ID]
 link: [LINK]
 title: [TITLE]
 date: [DATE]
+author: [AUTHOR]
 keywords: [CATEGORIES]
 image: [IMAGE]
 images: [IMAGES]
@@ -69,6 +70,18 @@ _[DATE]_
 Make sure to use meaningful placeholders that align with the content you want to display in the generated Markdown files. These placeholders will be replaced with the actual values from the RSS feed entries during the conversion process.
 
 Feel free to adjust the template according to your needs, including adding more metadata or formatting options. The template allows you to control the structure and appearance of the generated Markdown files.
+
+## Compile Project
+
+To package the project, you'll need to use [vercel/ncc](https://github.com/vercel/ncc) which compiles all source code and dependencies into a single file.
+
+```bash
+npm i -g @vercel/ncc
+```
+
+```bash
+ncc build index.js -o dist
+```
 
 ## Contribution
 
