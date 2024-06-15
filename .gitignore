@@ -136,3 +136,7 @@ out
 
 # vs code
 *.code-workspace
+
+# NPM Modules
+node_modules
+package-lock.json

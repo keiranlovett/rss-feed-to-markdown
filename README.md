@@ -2,7 +2,7 @@
 
 This GitHub Action converts RSS feed entries to Markdown files. It fetches the RSS feed, extracts relevant information from each entry, and generates Markdown files using a provided template.
 
-## Inputs
+## Input Variables
 
 - `feed_url` (required): The URL of the RSS feed.
 - `template_file` (required): The path to the template file.
@@ -40,20 +40,23 @@ jobs:
           output_dir: '_posts/events/'
 ```
 
-> Please note that you need to replace 'https://www.example.com/rss-feed.xml' with the actual URL of the RSS feed you want to convert, 'path/to/template.md' with the path to your template file, and 'path/to/output' with the desired output directory path.
-
 ## Template File
 
 1. Create a new Markdown file named template.md.
 2. Customize the template to fit your desired output format. You can use Markdown syntax and add placeholders for dynamic content.
-3. Identify the parts of the template that you want to be replaced with actual values from the RSS feed entries. Placeholders include `[ID]`, `[DATE]`, `[LINK]`, `[TITLE]`, `[DESCRIPTION]`, `[CONTENT]`, `[MARKDOWN]`, `[AUTHOR]`, `[VIDEO]`, `[IMAGE]`, `[CATEGORIES]`, `[VIEWS]`, `[RATING]`.
+3. Identify the parts of the template that you want to be replaced with actual values from the RSS feed entries. Placeholders include `[ID]`, `[DATE]`, `[LINK]`, `[TITLE]`, `[DESCRIPTION]`, `[CONTENT]`, `[MARKDOWN]`, `[AUTHOR]`, `[VIDEO]`, `[IMAGE]`, `[IMAGES]`, `[CATEGORIES]`, `[VIEWS]`, `[RATING]`.
 4. Replace the corresponding parts in the template with the desired placeholders. For example:
 
 ```markdown
 ---
+id: [ID]
+link: [LINK]
 title: [TITLE]
 date: [DATE]
+author: [AUTHOR]
 keywords: [CATEGORIES]
+image: [IMAGE]
+images: [IMAGES]
 description: >
   [DESCRIPTION]
 ---
@@ -68,7 +71,19 @@ Make sure to use meaningful placeholders that align with the content you want to
 
 Feel free to adjust the template according to your needs, including adding more metadata or formatting options. The template allows you to control the structure and appearance of the generated Markdown files.
 
-## Contribution 
+## Compile Project
+
+To package the project, you'll need to use [vercel/ncc](https://github.com/vercel/ncc) which compiles all source code and dependencies into a single file.
+
+```bash
+npm i -g @vercel/ncc
+```
+
+```bash
+ncc build index.js -o dist
+```
+
+## Contribution
 
 Feel free to customize the workflow and inputs based on your specific use case.
 
