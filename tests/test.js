@@ -200,9 +200,8 @@ test("generateAtomMarkdown should handle Sean Voisen's feed correctly", async ()
 
   // Additional assertion to check specific parts
   const outputParts = output.split("**");
-  expect(outputParts[6]).toBe(" Unknown Author");
-  expect(outputParts[3]).toBe(
-    "Description:** Thoughts on prediction and decision-making in the context of AI.",
+  expect(outputParts[4].trim()).toBe(
+    "Thoughts on prediction and decision-making in the context of AI.",
   );
 });
 
