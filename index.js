@@ -1,6 +1,6 @@
 const core = require('@actions/core');
 const github = require('@actions/github');
-const { fetchAndParseFeed, generateMarkdown, saveMarkdown } = require('./process');
+const { fetchAndParseFeed, generateRssMarkdown, generateAtomMarkdown, saveMarkdown } = require('./process');
 const fs = require('fs');
 
 async function run() {
@@ -28,12 +28,14 @@ async function run() {
     // Fetch and parse the RSS feed
     const feedData = await fetchAndParseFeed(feedUrl);
 
-    const entries = feedData?.feed?.entry || feedData?.rss?.channel?.[0]?.item || [];
+    const isAtomFeed = !!feedData?.feed?.entry;
+    const entries = isAtomFeed ? feedData.feed.entry : feedData?.rss?.channel?.[0]?.item || [];
 
     // Process the feed entries and generate Markdown files
     entries.forEach((entry) => {
-      
-      const { output, date, title } = generateMarkdown(template, entry);
+      const { output, date, title } = isAtomFeed
+        ? generateAtomMarkdown(template, entry)
+        : generateRssMarkdown(template, entry);
       const filePath = saveMarkdown(outputDir, date, title, output);
 
       console.log(`Markdown file '${filePath}' created.`);
