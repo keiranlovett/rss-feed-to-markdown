@@ -22,7 +22,7 @@ const generateRssMarkdown = (template, entry) => {
   const content = entry.description?.[0] || entry['media:group']?.[0]?.['media:description']?.[0] || '';
   const markdown = new TurndownService({codeBlockStyle: 'fenced', fenced: '```', bulletListMarker: '-'}).turndown(content);
   const description = content.replace(/(<([^>]+)>)/gi, "").split(" ").splice(0, 50).join(" ") || '';
-  const author = entry.author?.[0]?.name?.[0] || entry['dc:creator']?.[0] || 'Unknown Author';
+  const author = entry.author?.[0]?.name?.[0] || entry['dc:creator']?.[0] || entry.author?.[0] || 'Unknown Author';
   const video = entry['media:group']?.[0]?.['media:content']?.[0]?.$?.url || '';
   const image = entry['media:group']?.[0]?.['media:thumbnail']?.[0]?.$.url || entry['media:thumbnail']?.[0]?.$.url || '';
   const images = (entry['enclosure'] || entry['media:content'])?.filter(e => imageTypes.includes(e.$['type']))?.map(e => e.$.url) || [];
