@@ -42,7 +42,7 @@ const generateAtomMarkdown = (template, entry) => {
   const safeTitle = title.replace(/[^\w\s-]/g, '') || '';
   const content = entry.content?.[0]?.['_'] || '';
   const markdown = new TurndownService({codeBlockStyle: 'fenced', fenced: '```', bulletListMarker: '-'}).turndown(content);
-  const description = entry.summary?.[0] || content.replace(/(<([^>]+)>)/gi, "").split(" ").splice(0, 50).join(" ") || '';
+  const description = entry.summary?.[0] || (content ? content.replace(/(<([^>]+)>)/gi, "").split(" ").splice(0, 50).join(" ") : '') || '';
   const author = entry.author?.[0]?.name?.[0] || 'Unknown Author';
   const video = '';
   const image = '';
