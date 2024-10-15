@@ -46,7 +46,7 @@ const generateAtomMarkdown = (template, entry) => {
   const author = typeof entry.author === 'string' ? entry.author : 
                  (Array.isArray(entry.author) ? 
                    (typeof entry.author[0] === 'string' ? entry.author[0] : entry.author[0]?.name?.[0]) : 
-                   'Unknown Author');
+                   (entry.author?.name?.[0] || 'Unknown Author'));
   const video = '';
   const image = '';
   const images = [];

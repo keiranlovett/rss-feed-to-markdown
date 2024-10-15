@@ -186,6 +186,11 @@ test("generateAtomMarkdown should handle Sean Voisen's feed correctly", async ()
   );
   expect(date).toBe("2023-05-21T00:00:00+00:00");
   expect(title).toBe("The Perils of Prediction");
+
+  // Additional assertion to check specific parts
+  const outputParts = output.split('**');
+  expect(outputParts[7]).toBe("Author:** Sean Voisen");
+  expect(outputParts[3]).toBe("Description:** Thoughts on prediction and decision-making in the context of AI.");
 });
 
 test("generateRssMarkdown should replace placeholders correctly", async () => {
