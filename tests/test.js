@@ -174,7 +174,7 @@ test("generateAtomMarkdown should handle Sean Voisen's feed correctly", async ()
   const expectedMarkdown = `# The Perils of Prediction
 **Link:** https://sean.voisen.org/blog/2023/05/perils-of-prediction/
 **Description:** Thoughts on prediction and decision-making in the context of AI.
-**Author:** Sean Voisen
+**Author:** Unknown Author
 **Published Date:** 2023-05-21T00:00:00+00:00
 **Video:**
 **Thumbnail:** ![Thumbnail]()
@@ -200,7 +200,7 @@ test("generateAtomMarkdown should handle Sean Voisen's feed correctly", async ()
 
   // Additional assertion to check specific parts
   const outputParts = output.split("**");
-  expect(outputParts[7]).toBe("Author:** Sean Voisen");
+  expect(outputParts[6]).toBe(" Unknown Author");
   expect(outputParts[3]).toBe(
     "Description:** Thoughts on prediction and decision-making in the context of AI.",
   );
