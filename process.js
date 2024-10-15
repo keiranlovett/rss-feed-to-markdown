@@ -16,13 +16,13 @@ async function fetchAndParseFeed(feedUrl) {
 // Process RSS feed entries and generate Markdown files
 const generateRssMarkdown = (template, entry) => {
   const id = entry['yt:videoId']?.[0] || entry['id']?.[0] || entry.guid?.[0]?.['_'] || entry.guid?.[0] || '';
-  const date = entry.pubDate?.[0] || '';
-  const link = entry.link?.[0] || '';
+  const date = entry.published?.[0] || entry.pubDate?.[0] || '';
+  const link = entry.link?.[0]?.$ ? entry.link[0].$.href : entry.link?.[0] || '';
   const title = entry.title?.[0]?.replace(/[^\w\s-]/g, '') || '';
   const content = entry.description?.[0] || entry['media:group']?.[0]?.['media:description']?.[0] || '';
   const markdown = new TurndownService({codeBlockStyle: 'fenced', fenced: '```', bulletListMarker: '-'}).turndown(content);
   const description = content.replace(/(<([^>]+)>)/gi, "").split(" ").splice(0, 50).join(" ") || '';
-  const author = entry['dc:creator']?.[0] || 'Unknown Author';
+  const author = entry.author?.[0]?.name?.[0] || entry['dc:creator']?.[0] || 'Unknown Author';
   const video = entry['media:group']?.[0]?.['media:content']?.[0]?.$?.url || '';
   const image = entry['media:group']?.[0]?.['media:thumbnail']?.[0]?.$.url || entry['media:thumbnail']?.[0]?.$.url || '';
   const images = (entry['enclosure'] || entry['media:content'])?.filter(e => imageTypes.includes(e.$['type']))?.map(e => e.$.url) || [];

@@ -80,8 +80,7 @@ test("generateMarkdown should replace placeholders correctly", async () => {
   const entry = feedData.feed.entry[0];
   const { output, date, title } = generateRssMarkdown(templateContent, entry);
 
-  const expectedMarkdown = `
-# My Title
+  const expectedMarkdown = `# My Title
 **Link:** https://www.youtube.com/watch?v=4BxrfhUwldc
 **Description:** My description here
 **Author:** Keiran Lovett
@@ -90,8 +89,7 @@ test("generateMarkdown should replace placeholders correctly", async () => {
 **Thumbnail:** ![Thumbnail](https://i1.ytimg.com/vi/4BxrfhUwldc/hqdefault.jpg)
 **Categories:**
 **Views:** 48
-**Rating:** 5.00
-`;
+**Rating:** 5.00`;
 
   console.log("Expected markdown:", normalizeWhitespace(expectedMarkdown));
   console.log("Generated markdown:", normalizeWhitespace(output));
