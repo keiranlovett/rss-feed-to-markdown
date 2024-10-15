@@ -51,28 +51,43 @@ const generateAtomMarkdown = (template, entry) => {
   const views = '';
   const rating = '';
 
-  return generateOutput(template, { id, date, link, title: safeTitle, content, markdown, description, author, video, image, images, categories, views, rating });
+  return generateOutput(template, { 
+    id, 
+    date, 
+    link, 
+    title: safeTitle, 
+    content, 
+    markdown, 
+    description: description || '', 
+    author, 
+    video, 
+    image, 
+    images, 
+    categories, 
+    views, 
+    rating 
+  });
 }
 
 // Helper function to generate the output
 const generateOutput = (template, data) => {
   const output = template
-    .replaceAll('[ID]', data.id)
-    .replaceAll('[DATE]', data.date)
-    .replaceAll('[LINK]', data.link)
-    .replaceAll('[TITLE]', data.title.replace(/\s+/g, ' ').trim())
-    .replaceAll('[DESCRIPTION]', data.description.replace(/\s+/g, ' ').trim())
-    .replaceAll('[CONTENT]', data.content)
-    .replaceAll('[MARKDOWN]', data.markdown)
-    .replaceAll('[AUTHOR]', data.author)
-    .replaceAll('[VIDEO]', data.video)
-    .replaceAll('[IMAGE]', data.image)
-    .replaceAll('[IMAGES]', data.images.join(','))
-    .replaceAll('[CATEGORIES]', data.categories.join(','))
-    .replaceAll('[VIEWS]', data.views)
-    .replaceAll('[RATING]', data.rating);
+    .replaceAll('[ID]', data.id || '')
+    .replaceAll('[DATE]', data.date || '')
+    .replaceAll('[LINK]', data.link || '')
+    .replaceAll('[TITLE]', (data.title || '').replace(/\s+/g, ' ').trim())
+    .replaceAll('[DESCRIPTION]', (data.description || '').replace(/\s+/g, ' ').trim())
+    .replaceAll('[CONTENT]', data.content || '')
+    .replaceAll('[MARKDOWN]', data.markdown || '')
+    .replaceAll('[AUTHOR]', data.author || '')
+    .replaceAll('[VIDEO]', data.video || '')
+    .replaceAll('[IMAGE]', data.image || '')
+    .replaceAll('[IMAGES]', (data.images || []).join(','))
+    .replaceAll('[CATEGORIES]', (data.categories || []).join(','))
+    .replaceAll('[VIEWS]', data.views || '')
+    .replaceAll('[RATING]', data.rating || '');
 
-  return { output, date: data.date, title: data.title };
+  return { output, date: data.date || '', title: data.title || '' };
 }
 
 function saveMarkdown(outputDir, date, title, markdown) {
