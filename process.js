@@ -38,7 +38,8 @@ const generateAtomMarkdown = (template, entry) => {
   const id = entry.id?.[0] || '';
   const date = entry.published?.[0] || entry.updated?.[0] || '';
   const link = entry.link?.[0]?.$?.href || '';
-  const title = entry.title?.[0]?.replace(/[^\w\s-]/g, '') || '';
+  const title = typeof entry.title === 'string' ? entry.title : (Array.isArray(entry.title) ? entry.title[0] : '');
+  const safeTitle = title.replace(/[^\w\s-]/g, '') || '';
   const content = entry.content?.[0]?.['_'] || '';
   const markdown = new TurndownService({codeBlockStyle: 'fenced', fenced: '```', bulletListMarker: '-'}).turndown(content);
   const description = entry.summary?.[0] || content.replace(/(<([^>]+)>)/gi, "").split(" ").splice(0, 50).join(" ") || '';
@@ -50,7 +51,7 @@ const generateAtomMarkdown = (template, entry) => {
   const views = '';
   const rating = '';
 
-  return generateOutput(template, { id, date, link, title, content, markdown, description, author, video, image, images, categories, views, rating });
+  return generateOutput(template, { id, date, link, title: safeTitle, content, markdown, description, author, video, image, images, categories, views, rating });
 }
 
 // Helper function to generate the output
