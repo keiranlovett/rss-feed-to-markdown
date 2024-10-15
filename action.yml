@@ -12,5 +12,5 @@ inputs:
     description: "The directory where the generated Markdown files will be saved"
     required: true
 runs:
-  using: 'node16'
-  main: 'dist/index.js'
+  using: "node16"
+  main: "dist/index.js"
