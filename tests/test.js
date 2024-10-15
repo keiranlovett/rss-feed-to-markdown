@@ -1,4 +1,8 @@
-const { generateRssMarkdown, generateAtomMarkdown, saveMarkdown } = require("../process");
+const {
+  generateRssMarkdown,
+  generateAtomMarkdown,
+  saveMarkdown,
+} = require("../process");
 const fs = require("fs");
 const path = require("path");
 const { parseStringPromise } = require("xml2js");
@@ -128,10 +132,10 @@ test("generateAtomMarkdown should replace placeholders correctly", async () => {
 **Description:** This is an Atom feed entry description.
 **Author:** John Doe
 **Published Date:** 2024-05-15T10:00:00Z
-**Video:** 
+**Video:**
 **Thumbnail:** ![Thumbnail]()
 **Categories:** category1,category2
-**Views:** 
+**Views:**
 **Rating:** `;
 
   console.log("Expected Atom markdown:", normalizeWhitespace(expectedMarkdown));
@@ -163,6 +167,7 @@ test("generateAtomMarkdown should handle Sean Voisen's feed correctly", async ()
   }
 
   const feedData = await parseStringPromise(xmlContent);
+  console.log("feedData", JSON.stringify(feedData));
   const entry = feedData.feed.entry[0];
   const { output, date, title } = generateAtomMarkdown(templateContent, entry);
 
@@ -171,14 +176,20 @@ test("generateAtomMarkdown should handle Sean Voisen's feed correctly", async ()
 **Description:** Thoughts on prediction and decision-making in the context of AI.
 **Author:** Sean Voisen
 **Published Date:** 2023-05-21T00:00:00+00:00
-**Video:** 
+**Video:**
 **Thumbnail:** ![Thumbnail]()
-**Categories:** 
-**Views:** 
+**Categories:**
+**Views:**
 **Rating:** `;
 
-  console.log("Expected Sean Voisen Atom markdown:", normalizeWhitespace(expectedMarkdown));
-  console.log("Generated Sean Voisen Atom markdown:", normalizeWhitespace(output));
+  console.log(
+    "Expected Sean Voisen Atom markdown:",
+    normalizeWhitespace(expectedMarkdown),
+  );
+  console.log(
+    "Generated Sean Voisen Atom markdown:",
+    normalizeWhitespace(output),
+  );
 
   // Perform assertions
   expect(normalizeWhitespace(output)).toBe(
@@ -188,9 +199,11 @@ test("generateAtomMarkdown should handle Sean Voisen's feed correctly", async ()
   expect(title).toBe("The Perils of Prediction");
 
   // Additional assertion to check specific parts
-  const outputParts = output.split('**');
+  const outputParts = output.split("**");
   expect(outputParts[7]).toBe("Author:** Sean Voisen");
-  expect(outputParts[3]).toBe("Description:** Thoughts on prediction and decision-making in the context of AI.");
+  expect(outputParts[3]).toBe(
+    "Description:** Thoughts on prediction and decision-making in the context of AI.",
+  );
 });
 
 test("generateRssMarkdown should replace placeholders correctly", async () => {
@@ -219,10 +232,10 @@ test("generateRssMarkdown should replace placeholders correctly", async () => {
 **Description:** Here is some text containing an interesting description.
 **Author:** John Doe
 **Published Date:** Sun, 06 Sep 2009 16:20:00 +0000
-**Video:** 
+**Video:**
 **Thumbnail:** ![Thumbnail]()
 **Categories:** Technology
-**Views:** 
+**Views:**
 **Rating:** `;
 
   console.log("Expected RSS markdown:", normalizeWhitespace(expectedMarkdown));
@@ -230,7 +243,7 @@ test("generateRssMarkdown should replace placeholders correctly", async () => {
 
   // Perform assertions
   expect(normalizeWhitespace(output)).toBe(
-    normalizeWhitespace(expectedMarkdown)
+    normalizeWhitespace(expectedMarkdown),
   );
   expect(date).toBe("Sun, 06 Sep 2009 16:20:00 +0000");
   expect(title).toBe("Example entry");
