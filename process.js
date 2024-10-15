@@ -76,7 +76,7 @@ const generateOutput = (template, data) => {
     .replaceAll('[DATE]', data.date || '')
     .replaceAll('[LINK]', data.link || '')
     .replaceAll('[TITLE]', (data.title || '').replace(/\s+/g, ' ').trim())
-    .replaceAll('[DESCRIPTION]', (data.description || '').replace(/\s+/g, ' ').trim())
+    .replaceAll('[DESCRIPTION]', typeof data.description === 'string' ? data.description.replace(/\s+/g, ' ').trim() : '')
     .replaceAll('[CONTENT]', data.content || '')
     .replaceAll('[MARKDOWN]', data.markdown || '')
     .replaceAll('[AUTHOR]', data.author || '')
