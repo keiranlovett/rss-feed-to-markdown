@@ -1,4 +1,4 @@
-const { generateRssMarkdown, saveMarkdown } = require("../process");
+const { generateRssMarkdown, generateAtomMarkdown, saveMarkdown } = require("../process");
 const fs = require("fs");
 const path = require("path");
 const { parseStringPromise } = require("xml2js");
@@ -59,7 +59,7 @@ test("Load and process XML and template", async () => {
   expect(output).toBeDefined();
 });
 
-test("generateMarkdown should replace placeholders correctly", async () => {
+test("generateRssMarkdown should replace placeholders correctly", async () => {
   const examplePath = "examples/youtube";
   const xmlPath = `${examplePath}/feed.xml`;
   const templatePath = `${examplePath}/template.md`;
@@ -100,6 +100,49 @@ test("generateMarkdown should replace placeholders correctly", async () => {
   );
   expect(date).toBe("2024-05-10T09:21:26+00:00");
   expect(title).toBe("My Title");
+});
+
+test("generateAtomMarkdown should replace placeholders correctly", async () => {
+  const examplePath = "examples/atom";
+  const xmlPath = `${examplePath}/feed.xml`;
+  const templatePath = `${examplePath}/template.md`;
+
+  // Load XML file
+  const xmlFilePath = path.join(__dirname, xmlPath);
+  const xmlContent = loadFile(xmlFilePath);
+
+  // Load template file
+  const templateFilePath = path.join(__dirname, templatePath);
+  const templateContent = loadFile(templateFilePath);
+
+  if (!xmlContent || !templateContent) {
+    throw new Error("Failed to load XML or template file");
+  }
+
+  const feedData = await parseStringPromise(xmlContent);
+  const entry = feedData.feed.entry[0];
+  const { output, date, title } = generateAtomMarkdown(templateContent, entry);
+
+  const expectedMarkdown = `# Atom Entry Title
+**Link:** https://example.com/atom-entry
+**Description:** This is an Atom feed entry description.
+**Author:** John Doe
+**Published Date:** 2024-05-15T10:00:00Z
+**Video:** 
+**Thumbnail:** ![Thumbnail]()
+**Categories:** category1,category2
+**Views:** 
+**Rating:** `;
+
+  console.log("Expected Atom markdown:", normalizeWhitespace(expectedMarkdown));
+  console.log("Generated Atom markdown:", normalizeWhitespace(output));
+
+  // Perform assertions
+  expect(normalizeWhitespace(output)).toBe(
+    normalizeWhitespace(expectedMarkdown),
+  );
+  expect(date).toBe("2024-05-15T10:00:00Z");
+  expect(title).toBe("Atom Entry Title");
 });
 
 test("saveMarkdown should save file correctly", () => {
