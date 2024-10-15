@@ -145,6 +145,49 @@ test("generateAtomMarkdown should replace placeholders correctly", async () => {
   expect(title).toBe("Atom Entry Title");
 });
 
+test("generateAtomMarkdown should handle Sean Voisen's feed correctly", async () => {
+  const examplePath = "examples/sean_voisen";
+  const xmlPath = `${examplePath}/feed.xml`;
+  const templatePath = `${examplePath}/template.md`;
+
+  // Load XML file
+  const xmlFilePath = path.join(__dirname, xmlPath);
+  const xmlContent = loadFile(xmlFilePath);
+
+  // Load template file
+  const templateFilePath = path.join(__dirname, templatePath);
+  const templateContent = loadFile(templateFilePath);
+
+  if (!xmlContent || !templateContent) {
+    throw new Error("Failed to load XML or template file");
+  }
+
+  const feedData = await parseStringPromise(xmlContent);
+  const entry = feedData.feed.entry[0];
+  const { output, date, title } = generateAtomMarkdown(templateContent, entry);
+
+  const expectedMarkdown = `# The Perils of Prediction
+**Link:** https://sean.voisen.org/blog/2023/05/perils-of-prediction/
+**Description:** Thoughts on prediction and decision-making in the context of AI.
+**Author:** Sean Voisen
+**Published Date:** 2023-05-21T00:00:00+00:00
+**Video:** 
+**Thumbnail:** ![Thumbnail]()
+**Categories:** 
+**Views:** 
+**Rating:** `;
+
+  console.log("Expected Sean Voisen Atom markdown:", normalizeWhitespace(expectedMarkdown));
+  console.log("Generated Sean Voisen Atom markdown:", normalizeWhitespace(output));
+
+  // Perform assertions
+  expect(normalizeWhitespace(output)).toBe(
+    normalizeWhitespace(expectedMarkdown),
+  );
+  expect(date).toBe("2023-05-21T00:00:00+00:00");
+  expect(title).toBe("The Perils of Prediction");
+});
+
 test("generateRssMarkdown should replace placeholders correctly", async () => {
   const examplePath = "examples/rss";
   const xmlPath = `${examplePath}/feed.xml`;

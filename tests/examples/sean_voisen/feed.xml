@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Sean Voisen</title>
+  <link href="https://sean.voisen.org/"/>
+  <updated>2023-05-21T00:00:00+00:00</updated>
+  <id>https://sean.voisen.org/</id>
+  <author>
+    <name>Sean Voisen</name>
+  </author>
+  <entry>
+    <title>The Perils of Prediction</title>
+    <link href="https://sean.voisen.org/blog/2023/05/perils-of-prediction/"/>
+    <updated>2023-05-21T00:00:00+00:00</updated>
+    <id>https://sean.voisen.org/blog/2023/05/perils-of-prediction/</id>
+    <content type="html">
+      &lt;p&gt;In his book &lt;em&gt;The Black Swan&lt;/em&gt;, Nassim Nicholas Taleb writes:&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;We tend to use knowledge as therapy.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;This is a pithy way of saying that we humans have a tendency to seek out information and explanations as a way of comforting ourselves, of feeling more in control of our environment and circumstances, even when that information provides no practical value. We do this, Taleb argues, even when the information we seek pertains to unpredictable future events.&lt;/p&gt;
+
+&lt;p&gt;In other words, we like to make predictions, even when those predictions are unlikely to be accurate or helpful.&lt;/p&gt;
+
+&lt;p&gt;I've been thinking about this a lot lately in the context of all the brouhaha surrounding large language models and "artificial general intelligence." There's been no shortage of prognostication on the topic. Pundits, journalists, and tech luminaries of all stripes have been quick to make bold claims about the future of AI and its effects on humanity and the job market. These predictions range from the exuberantly positive to the dismally apocalyptic. But if Taleb is correct, we should be wary of all of them. The future is fundamentally unpredictable, and these predictions likely serve more as a form of therapy for their authors than as actual insight.&lt;/p&gt;
+
+&lt;p&gt;The problem is not just that these predictions are likely to be wrong, but that they can be actively harmful. They can lead to poor decision-making, misallocation of resources, and unnecessary anxiety. They can also distract us from more important and actionable concerns.&lt;/p&gt;
+
+&lt;p&gt;So what should we do instead? Here are a few suggestions:&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;strong&gt;Focus on the present&lt;/strong&gt;: Instead of speculating about what AI might do in the future, pay attention to what it's doing right now. What are its current capabilities and limitations? How is it being used in practice? What are the immediate ethical concerns?&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;strong&gt;Emphasize principles over predictions&lt;/strong&gt;: Rather than trying to predict specific outcomes, focus on developing and promoting ethical principles for AI development and use. These principles can guide decision-making regardless of how the technology evolves.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;strong&gt;Prepare for uncertainty&lt;/strong&gt;: Instead of betting on a particular future, prepare for a range of possibilities. This might involve developing adaptable skills, creating flexible policies, and building resilient systems.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;strong&gt;Encourage experimentation&lt;/strong&gt;: Rather than assuming we know how AI will impact various fields, encourage small-scale experiments and pilots. These can provide valuable, concrete data about the effects of AI in specific contexts.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;strong&gt;Stay humble&lt;/strong&gt;: Remember that the future is inherently unpredictable. Be skeptical of confident predictions, especially your own.&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;The rapid advancement of AI technology is exciting and potentially transformative. But we don't need to pretend we can see the future to engage with it productively. By focusing on the present, emphasizing principles, preparing for uncertainty, encouraging experimentation, and staying humble, we can navigate the AI revolution more effectively than any prediction could allow.&lt;/p&gt;
+    </content>
+    <summary type="html">Thoughts on prediction and decision-making in the context of AI.</summary>
+  </entry>
+</feed>
