@@ -145,6 +145,49 @@ test("generateAtomMarkdown should replace placeholders correctly", async () => {
   expect(title).toBe("Atom Entry Title");
 });
 
+test("generateRssMarkdown should replace placeholders correctly", async () => {
+  const examplePath = "examples/rss";
+  const xmlPath = `${examplePath}/feed.xml`;
+  const templatePath = `${examplePath}/template.md`;
+
+  // Load XML file
+  const xmlFilePath = path.join(__dirname, xmlPath);
+  const xmlContent = loadFile(xmlFilePath);
+
+  // Load template file
+  const templateFilePath = path.join(__dirname, templatePath);
+  const templateContent = loadFile(templateFilePath);
+
+  if (!xmlContent || !templateContent) {
+    throw new Error("Failed to load XML or template file");
+  }
+
+  const feedData = await parseStringPromise(xmlContent);
+  const entry = feedData.rss.channel[0].item[0];
+  const { output, date, title } = generateRssMarkdown(templateContent, entry);
+
+  const expectedMarkdown = `# Example entry
+**Link:** http://www.example.com/blog/post/1
+**Description:** Here is some text containing an interesting description.
+**Author:** John Doe
+**Published Date:** Sun, 06 Sep 2009 16:20:00 +0000
+**Video:** 
+**Thumbnail:** ![Thumbnail]()
+**Categories:** Technology
+**Views:** 
+**Rating:** `;
+
+  console.log("Expected RSS markdown:", normalizeWhitespace(expectedMarkdown));
+  console.log("Generated RSS markdown:", normalizeWhitespace(output));
+
+  // Perform assertions
+  expect(normalizeWhitespace(output)).toBe(
+    normalizeWhitespace(expectedMarkdown)
+  );
+  expect(date).toBe("Sun, 06 Sep 2009 16:20:00 +0000");
+  expect(title).toBe("Example entry");
+});
+
 test("saveMarkdown should save file correctly", () => {
   const outputDir = "output";
   const date = "2024-05-10T09:21:26+00:00";
