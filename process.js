@@ -42,8 +42,8 @@ const generateAtomMarkdown = (template, entry) => {
   const safeTitle = title.replace(/[^\w\s-]/g, '') || '';
   const content = entry.content?.[0]?._ || '';
   const markdown = new TurndownService({codeBlockStyle: 'fenced', fenced: '```', bulletListMarker: '-'}).turndown(content);
-  const description = entry.summary?.[0]?._ || (content ? content.replace(/(<([^>]+)>)/gi, "").split(" ").splice(0, 50).join(" ") : '') || '';
-  const author = entry.author?.[0]?.name?.[0] || '';
+  const description = entry.summary?.[0]?._ || entry.summary?.[0] || (content ? content.replace(/(<([^>]+)>)/gi, "").split(" ").splice(0, 50).join(" ") : '') || '';
+  const author = entry.author?.[0]?.name?.[0] || entry.author?.[0] || '';
   const video = '';
   const image = '';
   const images = [];
