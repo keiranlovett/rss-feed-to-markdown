@@ -38,12 +38,12 @@ const generateAtomMarkdown = (template, entry) => {
   const id = entry.id?.[0] || '';
   const date = entry.published?.[0] || entry.updated?.[0] || '';
   const link = entry.link?.[0]?.$?.href || '';
-  const title = typeof entry.title === 'string' ? entry.title : (Array.isArray(entry.title) ? entry.title[0] : '');
+  const title = typeof entry.title?.[0] === 'string' ? entry.title[0] : (entry.title?.[0]?._ || '');
   const safeTitle = title.replace(/[^\w\s-]/g, '') || '';
-  const content = entry.content?.[0]?.['_'] || '';
+  const content = entry.content?.[0]?._ || '';
   const markdown = new TurndownService({codeBlockStyle: 'fenced', fenced: '```', bulletListMarker: '-'}).turndown(content);
-  const description = entry.summary?.[0] || (content ? content.replace(/(<([^>]+)>)/gi, "").split(" ").splice(0, 50).join(" ") : '') || '';
-  const author = entry.author?.[0]?.name?.[0] || 'Unknown Author';
+  const description = entry.summary?.[0]?._ || (content ? content.replace(/(<([^>]+)>)/gi, "").split(" ").splice(0, 50).join(" ") : '') || '';
+  const author = entry.author?.[0]?.name?.[0] || '';
   const video = '';
   const image = '';
   const images = [];
