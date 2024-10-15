@@ -43,7 +43,7 @@ const generateAtomMarkdown = (template, entry) => {
   const content = entry.content?.[0]?.['_'] || '';
   const markdown = new TurndownService({codeBlockStyle: 'fenced', fenced: '```', bulletListMarker: '-'}).turndown(content);
   const description = entry.summary?.[0] || (content ? content.replace(/(<([^>]+)>)/gi, "").split(" ").splice(0, 50).join(" ") : '') || '';
-  const author = entry.author?.[0]?.name?.[0] || entry.author?.[0] || 'Unknown Author';
+  const author = entry.author?.[0]?.name?.[0] || (typeof entry.author?.[0] === 'string' ? entry.author[0] : 'Unknown Author');
   const video = '';
   const image = '';
   const images = [];
