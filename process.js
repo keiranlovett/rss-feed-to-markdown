@@ -43,11 +43,14 @@ const generateAtomMarkdown = (template, entry) => {
   const content = entry.content?.[0]?.['_'] || '';
   const markdown = new TurndownService({codeBlockStyle: 'fenced', fenced: '```', bulletListMarker: '-'}).turndown(content);
   const description = entry.summary?.[0] || (content ? content.replace(/(<([^>]+)>)/gi, "").split(" ").splice(0, 50).join(" ") : '') || '';
-  const author = entry.author?.[0]?.name?.[0] || (typeof entry.author?.[0] === 'string' ? entry.author[0] : 'Unknown Author');
+  const author = typeof entry.author === 'string' ? entry.author : 
+                 (Array.isArray(entry.author) ? 
+                   (typeof entry.author[0] === 'string' ? entry.author[0] : entry.author[0]?.name?.[0]) : 
+                   'Unknown Author');
   const video = '';
   const image = '';
   const images = [];
-  const categories = entry.category?.map(cat => cat.$.term) || [];
+  const categories = entry.category?.map(cat => typeof cat === 'string' ? cat : cat.$.term) || [];
   const views = '';
   const rating = '';
 
