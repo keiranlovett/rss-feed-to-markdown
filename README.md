@@ -5,7 +5,7 @@ This GitHub Action converts RSS feed entries to Markdown files. It fetches RSS f
 ## Input Variables
 
 - `feed_url` (optional): The URL of a single RSS feed or a JSON array of feed URLs as a string.
-- `feed_urls_file` (optional): Path to a JSON file containing an array of feed URLs.
+- `feed_urls_file` (optional): Path to a JSON file containing an array of feed URLs or a plain text file with one URL per line.
 - `template_file` (required): The path to the template file.
 - `output_dir` (required): The directory where the generated Markdown files will be saved.
 
@@ -96,7 +96,9 @@ jobs:
           output_dir: '_posts/events/'
 ```
 
-For the `feed_urls_file` example, create a JSON file named `feed_urls.json` in your repository with the following structure:
+For the `feed_urls_file` example, you can use either a JSON file or a plain text file:
+
+1. JSON file (e.g., `feed_urls.json`):
 
 ```json
 [
@@ -104,6 +106,17 @@ For the `feed_urls_file` example, create a JSON file named `feed_urls.json` in y
   "https://www.example2.com/rss-feed.xml",
   "https://www.example3.com/rss-feed.xml"
 ]
+```
+
+2. Plain text file (e.g., `feed_urls.txt`):
+
+```
+https://www.example1.com/rss-feed.xml
+https://www.example2.com/rss-feed.xml
+https://www.example3.com/rss-feed.xml
+
+# This is a comment and will be ignored
+# Blank lines are also ignored
 ```
 
 ## Template File

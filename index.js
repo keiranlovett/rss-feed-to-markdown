@@ -47,7 +47,15 @@ async function run() {
         return;
       }
       const feedUrlsContent = fs.readFileSync(feedUrlsFile, "utf8");
-      feedUrls = JSON.parse(feedUrlsContent);
+      try {
+        feedUrls = JSON.parse(feedUrlsContent);
+      } catch (error) {
+        // If JSON parsing fails, treat it as a plain text file
+        feedUrls = feedUrlsContent
+          .split('\n')
+          .map(line => line.trim())
+          .filter(line => line && !line.startsWith('#'));
+      }
     } else {
       core.setFailed("Either feed_url or feed_urls_file must be provided.");
       return;
