@@ -31,7 +31,16 @@ async function run() {
 
     let feedUrls = [];
     if (feedUrl) {
-      feedUrls.push(feedUrl);
+      try {
+        const parsedFeedUrl = JSON.parse(feedUrl);
+        if (Array.isArray(parsedFeedUrl)) {
+          feedUrls = parsedFeedUrl;
+        } else {
+          feedUrls.push(feedUrl);
+        }
+      } catch (error) {
+        feedUrls.push(feedUrl);
+      }
     } else if (feedUrlsFile) {
       if (!fs.existsSync(feedUrlsFile)) {
         core.setFailed(`Feed URLs file '${feedUrlsFile}' does not exist.`);
@@ -41,6 +50,11 @@ async function run() {
       feedUrls = JSON.parse(feedUrlsContent);
     } else {
       core.setFailed("Either feed_url or feed_urls_file must be provided.");
+      return;
+    }
+
+    if (feedUrls.length === 0) {
+      core.setFailed("No valid feed URLs provided.");
       return;
     }
 
