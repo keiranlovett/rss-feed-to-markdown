@@ -5,9 +5,8 @@ const fs = require('fs');
 
 async function run() {
   try {
-
-    //node index.js feed_url= template_file= output_dir=test
     const feedUrl = core.getInput('feed_url');
+    const feedUrlsFile = core.getInput('feed_urls_file');
     const templateFile = core.getInput('template_file');
     const outputDir = core.getInput('output_dir');
 
@@ -24,22 +23,39 @@ async function run() {
 
     // Read the template file
     const template = fs.readFileSync(templateFile, 'utf8');
-    
-    // Fetch and parse the RSS feed
-    const feedData = await fetchAndParseFeed(feedUrl);
 
-    const isAtomFeed = !!feedData?.feed?.entry;
-    const entries = isAtomFeed ? feedData.feed.entry : feedData?.rss?.channel?.[0]?.item || [];
+    let feedUrls = [];
+    if (feedUrl) {
+      feedUrls.push(feedUrl);
+    } else if (feedUrlsFile) {
+      if (!fs.existsSync(feedUrlsFile)) {
+        core.setFailed(`Feed URLs file '${feedUrlsFile}' does not exist.`);
+        return;
+      }
+      const feedUrlsContent = fs.readFileSync(feedUrlsFile, 'utf8');
+      feedUrls = JSON.parse(feedUrlsContent);
+    } else {
+      core.setFailed('Either feed_url or feed_urls_file must be provided.');
+      return;
+    }
 
-    // Process the feed entries and generate Markdown files
-    entries.forEach((entry) => {
-      const { output, date, title } = isAtomFeed
-        ? generateAtomMarkdown(template, entry)
-        : generateRssMarkdown(template, entry);
-      const filePath = saveMarkdown(outputDir, date, title, output);
+    for (const url of feedUrls) {
+      // Fetch and parse the RSS feed
+      const feedData = await fetchAndParseFeed(url);
 
-      console.log(`Markdown file '${filePath}' created.`);
-    });
+      const isAtomFeed = !!feedData?.feed?.entry;
+      const entries = isAtomFeed ? feedData.feed.entry : feedData?.rss?.channel?.[0]?.item || [];
+
+      // Process the feed entries and generate Markdown files
+      entries.forEach((entry) => {
+        const { output, date, title } = isAtomFeed
+          ? generateAtomMarkdown(template, entry)
+          : generateRssMarkdown(template, entry);
+        const filePath = saveMarkdown(outputDir, date, title, output);
+
+        console.log(`Markdown file '${filePath}' created.`);
+      });
+    }
   } 
   catch (error) {
     core.setFailed(error.message);

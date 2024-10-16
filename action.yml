@@ -4,7 +4,10 @@ author: "Keiran Lovett"
 inputs:
   feed_url:
     description: "The URL of the RSS feed"
-    required: true
+    required: false
+  feed_urls_file:
+    description: "Path to a JSON file containing an array of feed URLs"
+    required: false
   template_file:
     description: "The path to the template file"
     required: true
