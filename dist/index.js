@@ -26891,6 +26891,8 @@ function useColors() {
 		return false;
 	}
 
+	let m;
+
 	// Is webkit? http://stackoverflow.com/a/16459606/376773
 	// document is undefined in react-native: https://github.com/facebook/react-native/pull/1632
 	return (typeof document !== 'undefined' && document.documentElement && document.documentElement.style && document.documentElement.style.WebkitAppearance) ||
@@ -26898,7 +26900,7 @@ function useColors() {
 		(typeof window !== 'undefined' && window.console && (window.console.firebug || (window.console.exception && window.console.table))) ||
 		// Is firefox >= v31?
 		// https://developer.mozilla.org/en-US/docs/Tools/Web_Console#Styling_messages
-		(typeof navigator !== 'undefined' && navigator.userAgent && navigator.userAgent.toLowerCase().match(/firefox\/(\d+)/) && parseInt(RegExp.$1, 10) >= 31) ||
+		(typeof navigator !== 'undefined' && navigator.userAgent && (m = navigator.userAgent.toLowerCase().match(/firefox\/(\d+)/)) && parseInt(m[1], 10) >= 31) ||
 		// Double check webkit in userAgent just in case we are in a worker
 		(typeof navigator !== 'undefined' && navigator.userAgent && navigator.userAgent.toLowerCase().match(/applewebkit\/(\d+)/));
 }
@@ -28378,7 +28380,7 @@ var y = d * 365.25;
  * @api public
  */
 
-module.exports = function(val, options) {
+module.exports = function (val, options) {
   options = options || {};
   var type = typeof val;
   if (type === 'string' && val.length > 0) {
@@ -60997,16 +60999,20 @@ module.exports = /*#__PURE__*/JSON.parse('{"name":"axios","version":"0.21.4","de
 var __webpack_exports__ = {};
 const core = __nccwpck_require__(4481);
 const github = __nccwpck_require__(4613);
-const { fetchAndParseFeed, generateRssMarkdown, generateAtomMarkdown, saveMarkdown } = __nccwpck_require__(6544);
+const {
+  fetchAndParseFeed,
+  generateRssMarkdown,
+  generateAtomMarkdown,
+  saveMarkdown,
+} = __nccwpck_require__(6544);
 const fs = __nccwpck_require__(9896);
 
 async function run() {
   try {
-
-    //node index.js feed_url= template_file= output_dir=test
-    const feedUrl = core.getInput('feed_url');
-    const templateFile = core.getInput('template_file');
-    const outputDir = core.getInput('output_dir');
+    const feedUrl = core.getInput("feed_url");
+    const feedUrlsFile = core.getInput("feed_urls_file");
+    const templateFile = core.getInput("template_file");
+    const outputDir = core.getInput("output_dir");
 
     // Validate input values
     if (!fs.existsSync(templateFile)) {
@@ -61020,25 +61026,43 @@ async function run() {
     }
 
     // Read the template file
-    const template = fs.readFileSync(templateFile, 'utf8');
-    
-    // Fetch and parse the RSS feed
-    const feedData = await fetchAndParseFeed(feedUrl);
+    const template = fs.readFileSync(templateFile, "utf8");
 
-    const isAtomFeed = !!feedData?.feed?.entry;
-    const entries = isAtomFeed ? feedData.feed.entry : feedData?.rss?.channel?.[0]?.item || [];
+    let feedUrls = [];
+    if (feedUrl) {
+      feedUrls.push(feedUrl);
+    } else if (feedUrlsFile) {
+      if (!fs.existsSync(feedUrlsFile)) {
+        core.setFailed(`Feed URLs file '${feedUrlsFile}' does not exist.`);
+        return;
+      }
+      const feedUrlsContent = fs.readFileSync(feedUrlsFile, "utf8");
+      feedUrls = JSON.parse(feedUrlsContent);
+    } else {
+      core.setFailed("Either feed_url or feed_urls_file must be provided.");
+      return;
+    }
 
-    // Process the feed entries and generate Markdown files
-    entries.forEach((entry) => {
-      const { output, date, title } = isAtomFeed
-        ? generateAtomMarkdown(template, entry)
-        : generateRssMarkdown(template, entry);
-      const filePath = saveMarkdown(outputDir, date, title, output);
+    for (const url of feedUrls) {
+      // Fetch and parse the RSS feed
+      const feedData = await fetchAndParseFeed(url);
 
-      console.log(`Markdown file '${filePath}' created.`);
-    });
-  } 
-  catch (error) {
+      const isAtomFeed = !!feedData?.feed?.entry;
+      const entries = isAtomFeed
+        ? feedData.feed.entry
+        : feedData?.rss?.channel?.[0]?.item || [];
+
+      // Process the feed entries and generate Markdown files
+      entries.forEach((entry) => {
+        const { output, date, title } = isAtomFeed
+          ? generateAtomMarkdown(template, entry)
+          : generateRssMarkdown(template, entry);
+        const filePath = saveMarkdown(outputDir, date, title, output);
+
+        console.log(`Markdown file '${filePath}' created.`);
+      });
+    }
+  } catch (error) {
     core.setFailed(error.message);
   }
 }
