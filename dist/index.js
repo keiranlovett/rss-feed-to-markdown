@@ -58883,6 +58883,8 @@ function wrappy (fn, cb) {
 /***/ 6544:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
+const core = __nccwpck_require__(4481);
+const github = __nccwpck_require__(4613);
 const fs = __nccwpck_require__(9896);
 const path = __nccwpck_require__(6928);
 const axios = __nccwpck_require__(3849);
@@ -58891,13 +58893,80 @@ const sanitize = __nccwpck_require__(3992);
 const TurndownService = __nccwpck_require__(6291);
 const imageTypes = ["image/png", "image/jpeg", "image/jpg", "image/gif"];
 
+function parseFeedUrls(feedUrl, feedUrlsFile) {
+  let feedUrls = [];
+  if (feedUrl) {
+    try {
+      const parsedFeedUrl = JSON.parse(feedUrl);
+      if (Array.isArray(parsedFeedUrl)) {
+        feedUrls = parsedFeedUrl;
+      } else {
+        feedUrls.push(feedUrl);
+      }
+    } catch (error) {
+      feedUrls.push(feedUrl);
+    }
+  } else if (feedUrlsFile) {
+    if (!fs.existsSync(feedUrlsFile)) {
+      throw new Error(`Feed URLs file '${feedUrlsFile}' does not exist.`);
+    }
+    const feedUrlsContent = fs.readFileSync(feedUrlsFile, "utf8");
+    try {
+      feedUrls = JSON.parse(feedUrlsContent);
+    } catch (error) {
+      // If JSON parsing fails, treat it as a plain text file
+      feedUrls = feedUrlsContent
+        .split("\n")
+        .map((line) => line.trim())
+        .filter((line) => line && !line.startsWith("#"));
+    }
+  } else {
+    throw new Error("Either feed_url or feed_urls_file must be provided.");
+  }
+  return feedUrls;
+}
+
+async function processFeeds(feedUrls, template, outputDir) {
+  for (const url of feedUrls) {
+    // Fetch and parse the RSS feed
+    const feedData = await fetchAndParseFeed(url);
+
+    let entries;
+    let generateMarkdown;
+
+    if (feedData.feed?.entry) {
+      // Atom Feed
+      entries = feedData.feed.entry;
+      generateMarkdown = generateAtomMarkdown;
+    } else {
+      // RSS Feed
+      entries = feedData?.rss?.channel?.[0]?.item || [];
+      generateMarkdown = generateRssMarkdown;
+    }
+
+    // Process the feed entries and generate Markdown files
+    entries.forEach((entry) => {
+      const { output, date, title } = generateMarkdown(template, entry);
+      const filePath = saveMarkdown(outputDir, date, title, output);
+
+      console.log(`Markdown file '${filePath}' created.`);
+    });
+  }
+}
+
 // Fetch the RSS feed
 async function fetchAndParseFeed(feedUrl) {
   const response = await axios.get(feedUrl);
-  const feedXml = response.data;
-  return parseStringPromise(feedXml);
-}
+  const feedData = response.data;
 
+  if (typeof feedData === "object") {
+    // Assume it's a JSON feed
+    return feedData;
+  } else {
+    // Assume it's an XML feed (RSS or Atom)
+    return parseStringPromise(feedData);
+  }
+}
 // Process RSS feed entries and generate Markdown files
 const generateRssMarkdown = (template, entry) => {
   const id =
@@ -59068,6 +59137,8 @@ function saveMarkdown(outputDir, date, title, markdown) {
 }
 
 module.exports = {
+  parseFeedUrls,
+  processFeeds,
   fetchAndParseFeed,
   generateRssMarkdown,
   generateAtomMarkdown,
@@ -61000,6 +61071,7 @@ var __webpack_exports__ = {};
 const core = __nccwpck_require__(4481);
 const github = __nccwpck_require__(4613);
 const {
+  parseFeedUrls,
   fetchAndParseFeed,
   generateRssMarkdown,
   generateAtomMarkdown,
@@ -61028,27 +61100,10 @@ async function run() {
     // Read the template file
     const template = fs.readFileSync(templateFile, "utf8");
 
-    let feedUrls = [];
-    if (feedUrl) {
-      try {
-        const parsedFeedUrl = JSON.parse(feedUrl);
-        if (Array.isArray(parsedFeedUrl)) {
-          feedUrls = parsedFeedUrl;
-        } else {
-          feedUrls.push(feedUrl);
-        }
-      } catch (error) {
-        feedUrls.push(feedUrl);
-      }
-    } else if (feedUrlsFile) {
-      if (!fs.existsSync(feedUrlsFile)) {
-        core.setFailed(`Feed URLs file '${feedUrlsFile}' does not exist.`);
-        return;
-      }
-      const feedUrlsContent = fs.readFileSync(feedUrlsFile, "utf8");
-      feedUrls = JSON.parse(feedUrlsContent);
-    } else {
-      core.setFailed("Either feed_url or feed_urls_file must be provided.");
+    const feedUrls = parseFeedUrls(feedUrl, feedUrlsFile);
+
+    if (feedUrls.length === 0) {
+      core.setFailed("No valid feed URLs provided.");
       return;
     }
 
@@ -61057,25 +61112,7 @@ async function run() {
       return;
     }
 
-    for (const url of feedUrls) {
-      // Fetch and parse the RSS feed
-      const feedData = await fetchAndParseFeed(url);
-
-      const isAtomFeed = !!feedData?.feed?.entry;
-      const entries = isAtomFeed
-        ? feedData.feed.entry
-        : feedData?.rss?.channel?.[0]?.item || [];
-
-      // Process the feed entries and generate Markdown files
-      entries.forEach((entry) => {
-        const { output, date, title } = isAtomFeed
-          ? generateAtomMarkdown(template, entry)
-          : generateRssMarkdown(template, entry);
-        const filePath = saveMarkdown(outputDir, date, title, output);
-
-        console.log(`Markdown file '${filePath}' created.`);
-      });
-    }
+    await processFeeds(feedUrls, template, outputDir);
   } catch (error) {
     core.setFailed(error.message);
   }

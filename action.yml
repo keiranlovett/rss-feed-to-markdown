@@ -3,10 +3,10 @@ description: "Converts RSS feed entries to Markdown files"
 author: "Keiran Lovett"
 inputs:
   feed_url:
-    description: "The URL of the RSS feed"
+    description: "The URL of the RSS feed (not required if feed_urls_file is provided)"
     required: false
   feed_urls_file:
-    description: "Path to a JSON file containing an array of feed URLs"
+    description: "Path to a TXT or JSON file containing an array of feed URLs"
     required: false
   template_file:
     description: "The path to the template file"
