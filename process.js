@@ -147,7 +147,7 @@ const generateRssMarkdown = (template, entry) => {
   return generateOutput(template, {
     id,
     date,
-    link,
+    link: link.trim(),
     title,
     content,
     markdown,
@@ -207,7 +207,7 @@ const generateAtomMarkdown = (template, entry) => {
   return generateOutput(template, {
     id,
     date,
-    link,
+    link: link.trim(),
     title: safeTitle,
     content,
     markdown,
@@ -225,28 +225,28 @@ const generateAtomMarkdown = (template, entry) => {
 // Helper function to generate the output
 const generateOutput = (template, data) => {
   const output = template
-    .replaceAll("[ID]", data.id.trim() || "")
-    .replaceAll("[DATE]", data.date.trim() || "")
-    .replaceAll("[LINK]", data.link.trim() || "")
+    .replaceAll("[ID]", data.id || "")
+    .replaceAll("[DATE]", data.date || "")
+    .replaceAll("[LINK]", data.link || "")
     .replaceAll(
       "[TITLE]",
-      (data.title.trim() || "").replace(/\s+/g, " ").trim(),
+      (data.title.trim() || "").replace(/\s+/g, " "),
     )
     .replaceAll(
       "[DESCRIPTION]",
       typeof data.description === "string"
-        ? data.description.replace(/\s+/g, " ").trim()
+        ? data.description.replace(/\s+/g, " ")
         : "",
     )
-    .replaceAll("[CONTENT]", data.content.trim() || "")
+    .replaceAll("[CONTENT]", data.content|| "")
     .replaceAll("[MARKDOWN]", data.markdown || "")
-    .replaceAll("[AUTHOR]", data.author.trim() || "")
-    .replaceAll("[VIDEO]", data.video.trim() || "")
-    .replaceAll("[IMAGE]", data.image.trim() || "")
-    .replaceAll("[IMAGES]", (data.images.trim() || []).join(","))
-    .replaceAll("[CATEGORIES]", (data.categories.trim() || []).join(","))
-    .replaceAll("[VIEWS]", data.views.trim() || "")
-    .replaceAll("[RATING]", data.rating.trim() || "");
+    .replaceAll("[AUTHOR]", data.author || "")
+    .replaceAll("[VIDEO]", data.video || "")
+    .replaceAll("[IMAGE]", data.image || "")
+    .replaceAll("[IMAGES]", (data.images || []).join(","))
+    .replaceAll("[CATEGORIES]", (data.categories || []).join(","))
+    .replaceAll("[VIEWS]", data.views || "")
+    .replaceAll("[RATING]", data.rating || "");
 
   return { output, date: data.date || "", title: data.title || "" };
 };
