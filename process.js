@@ -225,25 +225,28 @@ const generateAtomMarkdown = (template, entry) => {
 // Helper function to generate the output
 const generateOutput = (template, data) => {
   const output = template
-    .replaceAll("[ID]", data.id || "")
-    .replaceAll("[DATE]", data.date || "")
-    .replaceAll("[LINK]", data.link || "")
-    .replaceAll("[TITLE]", (data.title || "").replace(/\s+/g, " ").trim())
+    .replaceAll("[ID]", data.id.trim() || "")
+    .replaceAll("[DATE]", data.date.trim() || "")
+    .replaceAll("[LINK]", data.link.trim() || "")
+    .replaceAll(
+      "[TITLE]",
+      (data.title.trim() || "").replace(/\s+/g, " ").trim(),
+    )
     .replaceAll(
       "[DESCRIPTION]",
       typeof data.description === "string"
         ? data.description.replace(/\s+/g, " ").trim()
         : "",
     )
-    .replaceAll("[CONTENT]", data.content || "")
+    .replaceAll("[CONTENT]", data.content.trim() || "")
     .replaceAll("[MARKDOWN]", data.markdown || "")
-    .replaceAll("[AUTHOR]", data.author || "")
-    .replaceAll("[VIDEO]", data.video || "")
-    .replaceAll("[IMAGE]", data.image || "")
-    .replaceAll("[IMAGES]", (data.images || []).join(","))
-    .replaceAll("[CATEGORIES]", (data.categories || []).join(","))
-    .replaceAll("[VIEWS]", data.views || "")
-    .replaceAll("[RATING]", data.rating || "");
+    .replaceAll("[AUTHOR]", data.author.trim() || "")
+    .replaceAll("[VIDEO]", data.video.trim() || "")
+    .replaceAll("[IMAGE]", data.image.trim() || "")
+    .replaceAll("[IMAGES]", (data.images.trim() || []).join(","))
+    .replaceAll("[CATEGORIES]", (data.categories.trim() || []).join(","))
+    .replaceAll("[VIEWS]", data.views.trim() || "")
+    .replaceAll("[RATING]", data.rating.trim() || "");
 
   return { output, date: data.date || "", title: data.title || "" };
 };
