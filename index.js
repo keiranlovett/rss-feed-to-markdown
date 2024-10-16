@@ -1,6 +1,7 @@
 const core = require("@actions/core");
 const github = require("@actions/github");
 const {
+  parseFeedUrls,
   fetchAndParseFeed,
   generateRssMarkdown,
   generateAtomMarkdown,
@@ -29,35 +30,10 @@ async function run() {
     // Read the template file
     const template = fs.readFileSync(templateFile, "utf8");
 
-    let feedUrls = [];
-    if (feedUrl) {
-      try {
-        const parsedFeedUrl = JSON.parse(feedUrl);
-        if (Array.isArray(parsedFeedUrl)) {
-          feedUrls = parsedFeedUrl;
-        } else {
-          feedUrls.push(feedUrl);
-        }
-      } catch (error) {
-        feedUrls.push(feedUrl);
-      }
-    } else if (feedUrlsFile) {
-      if (!fs.existsSync(feedUrlsFile)) {
-        core.setFailed(`Feed URLs file '${feedUrlsFile}' does not exist.`);
-        return;
-      }
-      const feedUrlsContent = fs.readFileSync(feedUrlsFile, "utf8");
-      try {
-        feedUrls = JSON.parse(feedUrlsContent);
-      } catch (error) {
-        // If JSON parsing fails, treat it as a plain text file
-        feedUrls = feedUrlsContent
-          .split('\n')
-          .map(line => line.trim())
-          .filter(line => line && !line.startsWith('#'));
-      }
-    } else {
-      core.setFailed("Either feed_url or feed_urls_file must be provided.");
+    const feedUrls = parseFeedUrls(feedUrl, feedUrlsFile);
+
+    if (feedUrls.length === 0) {
+      core.setFailed("No valid feed URLs provided.");
       return;
     }
 
@@ -66,35 +42,7 @@ async function run() {
       return;
     }
 
-    for (const url of feedUrls) {
-      // Fetch and parse the RSS feed
-      const feedData = await fetchAndParseFeed(url);
-
-      let entries;
-      let generateMarkdown;
-
-      if (feedData.items) {
-        // JSON Feed
-        entries = feedData.items;
-        generateMarkdown = generateJsonMarkdown;
-      } else if (feedData.feed?.entry) {
-        // Atom Feed
-        entries = feedData.feed.entry;
-        generateMarkdown = generateAtomMarkdown;
-      } else {
-        // RSS Feed
-        entries = feedData?.rss?.channel?.[0]?.item || [];
-        generateMarkdown = generateRssMarkdown;
-      }
-
-      // Process the feed entries and generate Markdown files
-      entries.forEach((entry) => {
-        const { output, date, title } = generateMarkdown(template, entry);
-        const filePath = saveMarkdown(outputDir, date, title, output);
-
-        console.log(`Markdown file '${filePath}' created.`);
-      });
-    }
+    await processFeeds(feedUrls, template, outputDir);
   } catch (error) {
     core.setFailed(error.message);
   }

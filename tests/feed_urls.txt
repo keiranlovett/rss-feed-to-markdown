@@ -1,0 +1,4 @@
+# this line should be ignored and empty lines too
+
+https://example1.com/feed.xml
+https://example2.com/feed.xml

@@ -1,3 +1,5 @@
+const core = require("@actions/core");
+const github = require("@actions/github");
 const fs = require("fs");
 const path = require("path");
 const axios = require("axios");
@@ -6,12 +8,73 @@ const sanitize = require("sanitize-filename");
 const TurndownService = require("turndown");
 const imageTypes = ["image/png", "image/jpeg", "image/jpg", "image/gif"];
 
+function parseFeedUrls(feedUrl, feedUrlsFile) {
+  let feedUrls = [];
+  if (feedUrl) {
+    try {
+      const parsedFeedUrl = JSON.parse(feedUrl);
+      if (Array.isArray(parsedFeedUrl)) {
+        feedUrls = parsedFeedUrl;
+      } else {
+        feedUrls.push(feedUrl);
+      }
+    } catch (error) {
+      feedUrls.push(feedUrl);
+    }
+  } else if (feedUrlsFile) {
+    if (!fs.existsSync(feedUrlsFile)) {
+      throw new Error(`Feed URLs file '${feedUrlsFile}' does not exist.`);
+    }
+    const feedUrlsContent = fs.readFileSync(feedUrlsFile, "utf8");
+    try {
+      feedUrls = JSON.parse(feedUrlsContent);
+    } catch (error) {
+      // If JSON parsing fails, treat it as a plain text file
+      feedUrls = feedUrlsContent
+        .split("\n")
+        .map((line) => line.trim())
+        .filter((line) => line && !line.startsWith("#"));
+    }
+  } else {
+    throw new Error("Either feed_url or feed_urls_file must be provided.");
+  }
+  return feedUrls;
+}
+
+async function processFeeds(feedUrls, template, outputDir) {
+  for (const url of feedUrls) {
+    // Fetch and parse the RSS feed
+    const feedData = await fetchAndParseFeed(url);
+
+    let entries;
+    let generateMarkdown;
+
+    if (feedData.feed?.entry) {
+      // Atom Feed
+      entries = feedData.feed.entry;
+      generateMarkdown = generateAtomMarkdown;
+    } else {
+      // RSS Feed
+      entries = feedData?.rss?.channel?.[0]?.item || [];
+      generateMarkdown = generateRssMarkdown;
+    }
+
+    // Process the feed entries and generate Markdown files
+    entries.forEach((entry) => {
+      const { output, date, title } = generateMarkdown(template, entry);
+      const filePath = saveMarkdown(outputDir, date, title, output);
+
+      console.log(`Markdown file '${filePath}' created.`);
+    });
+  }
+}
+
 // Fetch the RSS feed
 async function fetchAndParseFeed(feedUrl) {
   const response = await axios.get(feedUrl);
   const feedData = response.data;
-  
-  if (typeof feedData === 'object') {
+
+  if (typeof feedData === "object") {
     // Assume it's a JSON feed
     return feedData;
   } else {
@@ -19,7 +82,6 @@ async function fetchAndParseFeed(feedUrl) {
     return parseStringPromise(feedData);
   }
 }
-
 // Process RSS feed entries and generate Markdown files
 const generateRssMarkdown = (template, entry) => {
   const id =
@@ -189,45 +251,11 @@ function saveMarkdown(outputDir, date, title, markdown) {
   return filePath;
 }
 
-// Process JSON feed entries and generate Markdown files
-const generateJsonMarkdown = (template, entry) => {
-  const id = entry.id || "";
-  const date = entry.date_published || entry.date_modified || "";
-  const link = entry.url || "";
-  const title = entry.title?.replace(/[^\w\s-]/g, "") || "";
-  const content = entry.content_html || entry.content_text || "";
-  const markdown = new TurndownService({
-    codeBlockStyle: "fenced",
-    fenced: "```",
-    bulletListMarker: "-",
-  }).turndown(content);
-  const description = entry.summary || (content ? content.split(" ").splice(0, 50).join(" ") : "");
-  const author = entry.author?.name || "Unknown Author";
-  const image = entry.image || "";
-  const categories = entry.tags || [];
-
-  return generateOutput(template, {
-    id,
-    date,
-    link,
-    title,
-    content,
-    markdown,
-    description,
-    author,
-    video: "",
-    image,
-    images: [image],
-    categories,
-    views: "",
-    rating: "",
-  });
-};
-
 module.exports = {
+  parseFeedUrls,
+  processFeeds,
   fetchAndParseFeed,
   generateRssMarkdown,
   generateAtomMarkdown,
-  generateJsonMarkdown,
   saveMarkdown,
 };
