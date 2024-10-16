@@ -1,14 +1,19 @@
 # RSS Feed to Markdown
 
-This GitHub Action converts RSS feed entries to Markdown files. It fetches the RSS feed, extracts relevant information from each entry, and generates Markdown files using a provided template.
+This GitHub Action converts RSS feed entries to Markdown files. It fetches RSS feeds, extracts relevant information from each entry, and generates Markdown files using a provided template.
 
 ## Input Variables
 
-- `feed_url` (required): The URL of the RSS feed.
+- `feed_url` (optional): The URL of a single RSS feed.
+- `feed_urls_file` (optional): Path to a JSON file containing an array of feed URLs.
 - `template_file` (required): The path to the template file.
 - `output_dir` (required): The directory where the generated Markdown files will be saved.
 
+Note: You must provide either `feed_url` or `feed_urls_file`, but not both.
+
 ## Example Usage
+
+### Single Feed URL
 
 ```yaml
 name: RSS Feed to Markdown
@@ -24,28 +29,76 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Set up Node.js
-        uses: actions/setup-node@v2
-        with:
-          node-version: '16'
-
       - name: Checkout code
         uses: actions/checkout@v2
 
       - name: Run RSS Feed to Markdown Action
         uses: keiranlovett/rss-feed-to-markdown@main
         with:
-          feed_url: 'https://www.youtube.com/feeds/videos.xml?channel_id=UCuVczNc74_jsmgNlAhHbz-Q'
+          feed_url: 'https://www.example.com/rss-feed.xml'
           template_file: 'assets/template.md'
           output_dir: '_posts/events/'
 ```
 
+### Multiple Feed URLs
+
+```yaml
+name: Multiple RSS Feeds to Markdown
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  convert_feeds:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Run RSS Feed to Markdown Action
+        uses: keiranlovett/rss-feed-to-markdown@main
+        with:
+          feed_urls_file: 'feed_urls.json'
+          template_file: 'assets/template.md'
+          output_dir: '_posts/events/'
+```
+
+For the multiple feed URLs example, create a JSON file named `feed_urls.json` in your repository with the following structure:
+
+```json
+[
+  "https://www.example1.com/rss-feed.xml",
+  "https://www.example2.com/rss-feed.xml",
+  "https://www.example3.com/rss-feed.xml"
+]
+```
+
 ## Template File
 
-1. Create a new Markdown file named template.md.
+1. Create a new Markdown file named `template.md`.
 2. Customize the template to fit your desired output format. You can use Markdown syntax and add placeholders for dynamic content.
-3. Identify the parts of the template that you want to be replaced with actual values from the RSS feed entries. Placeholders include `[ID]`, `[DATE]`, `[LINK]`, `[TITLE]`, `[DESCRIPTION]`, `[CONTENT]`, `[MARKDOWN]`, `[AUTHOR]`, `[VIDEO]`, `[IMAGE]`, `[IMAGES]`, `[CATEGORIES]`, `[VIEWS]`, `[RATING]`.
-4. Replace the corresponding parts in the template with the desired placeholders. For example:
+3. Use the following placeholders in your template:
+
+- `[ID]`: Unique identifier for the entry
+- `[DATE]`: Publication date
+- `[LINK]`: URL of the entry
+- `[TITLE]`: Title of the entry
+- `[DESCRIPTION]`: Short description or summary
+- `[CONTENT]`: Full content of the entry
+- `[MARKDOWN]`: Content converted to Markdown
+- `[AUTHOR]`: Author of the entry
+- `[VIDEO]`: URL of associated video (if available)
+- `[IMAGE]`: URL of the main image
+- `[IMAGES]`: Comma-separated list of image URLs
+- `[CATEGORIES]`: Comma-separated list of categories
+- `[VIEWS]`: Number of views (if available)
+- `[RATING]`: Rating of the entry (if available)
+
+Example template:
 
 ```markdown
 ---
@@ -61,30 +114,26 @@ description: >
   [DESCRIPTION]
 ---
 # [TITLE]
-##### [AUTHOR]
-_[DATE]_
+##### By [AUTHOR]
+_Published on [DATE]_
 
 [MARKDOWN]
+
+---
+Categories: [CATEGORIES]
 ```
-
-Make sure to use meaningful placeholders that align with the content you want to display in the generated Markdown files. These placeholders will be replaced with the actual values from the RSS feed entries during the conversion process.
-
-Feel free to adjust the template according to your needs, including adding more metadata or formatting options. The template allows you to control the structure and appearance of the generated Markdown files.
 
 ## Compile Project
 
-To package the project, you'll need to use [vercel/ncc](https://github.com/vercel/ncc) which compiles all source code and dependencies into a single file.
+To package the project, use [vercel/ncc](https://github.com/vercel/ncc) to compile all source code and dependencies into a single file:
 
 ```bash
 npm i -g @vercel/ncc
-```
-
-```bash
 ncc build index.js -o dist
 ```
 
 ## Contribution
 
-Feel free to customize the workflow and inputs based on your specific use case.
+Contributions are welcome! Feel free to submit issues or pull requests to improve the action.
 
-If you have any questions or need further assistance, please let me know!
+If you have any questions or need further assistance, please open an issue in the repository.
