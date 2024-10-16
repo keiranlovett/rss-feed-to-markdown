@@ -61,10 +61,15 @@ async function processFeeds(feedUrls, template, outputDir) {
 
     // Process the feed entries and generate Markdown files
     entries.forEach((entry) => {
-      const { output, date, title } = generateMarkdown(template, entry);
-      const filePath = saveMarkdown(outputDir, date, title, output);
+      try {
+        const { output, date, title } = generateMarkdown(template, entry);
+        const filePath = saveMarkdown(outputDir, date, title, output);
 
-      console.log(`Markdown file '${filePath}' created.`);
+        console.log(`Markdown file '${filePath}' created.`);
+      } catch (error) {
+        console.error(`Error processing feed entry for ${url}`);
+        console.error(error.message);
+      }
     });
   }
 }
