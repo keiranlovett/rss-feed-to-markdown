@@ -22,50 +22,52 @@ jobs:
     - name: build with ncc
       uses: tool3/ncc@master
       with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
+        github_token: ${{ env.GH_TOKEN }}
         src: 'index.js'
+        branch: main
+        
 
-    - name: Check for changes
-      id: check_changes
-      run: |
-        git add dist
-        if git diff --staged --quiet; then
-          echo "No changes to commit."
-          echo "no_changes=true" >> $GITHUB_OUTPUT
-        else
-          echo "Changes detected."
-          echo "no_changes=false" >> $GITHUB_OUTPUT
-        fi
+    # - name: Check for changes
+    #   id: check_changes
+    #   run: |
+    #     git add dist
+    #     if git diff --staged --quiet; then
+    #       echo "No changes to commit."
+    #       echo "no_changes=true" >> $GITHUB_OUTPUT
+    #     else
+    #       echo "Changes detected."
+    #       echo "no_changes=false" >> $GITHUB_OUTPUT
+    #     fi
 
-    - name: Create branch
-      if: steps.check_changes.outputs.no_changes == 'false'
-      run: |
-        git checkout -b ncc-build-${{ github.run_id }}
-        git commit -m "New ncc build"
+    # - name: Create branch
+    #   if: steps.check_changes.outputs.no_changes == 'false'
+    #   run: |
+    #     git checkout -b ncc-build-${{ github.run_id }}
+    #     git commit -m "New ncc build"
 
-    - name: Push changes
-      if: steps.check_changes.outputs.no_changes == 'false'
-      run: |
-        git push --set-upstream origin ncc-build-${{ github.run_id }}
-    - name: Create Pull Request
-      if: steps.check_changes.outputs.no_changes == 'false'
-      id: create_pr
-      run: |
-        PR_URL=$(gh pr create \
-          --title "New Build ${{ github.run_id }}" \
-          --body "Automated build" \
-          --base main \
-          --head ncc-build-${{ github.run_id }}
-        echo "pr_url=${PR_URL}" >> $GITHUB_OUTPUT
+    # - name: Push changes
+    #   if: steps.check_changes.outputs.no_changes == 'false'
+    #   run: |
+    #     git push --set-upstream origin ncc-build-${{ github.run_id }}
+    # - name: Create Pull Request
+    #   if: steps.check_changes.outputs.no_changes == 'false'
+    #   id: create_pr
+    #   run: |
+    #     PR_URL=$(gh pr create \
+    #       --title "New Build ${{ github.run_id }}" \
+    #       --body "Automated build" \
+    #       --base main \
+    #       --head ncc-build-${{ github.run_id }}
+    #     echo "pr_url=${PR_URL}" >> $GITHUB_OUTPUT
 
-    - name: Get PR number
-      if: steps.check_changes.outputs.no_changes == 'false'
-      id: get_pr_number
-      run: |
-        PR_NUMBER=$(gh pr view ${{ steps.create_pr.outputs.pr_url }} --json number --jq .number)
-        echo "pr_number=${PR_NUMBER}" >> $GITHUB_OUTPUT
+    # - name: Get PR number
+    #   if: steps.check_changes.outputs.no_changes == 'false'
+    #   id: get_pr_number
+    #   run: |
+    #     PR_NUMBER=$(gh pr view ${{ steps.create_pr.outputs.pr_url }} --json number --jq .number)
+    #     echo "pr_number=${PR_NUMBER}" >> $GITHUB_OUTPUT
 
-    - name: Merge Pull Request
-      if: steps.check_changes.outputs.no_changes == 'false'
-      run: |
-        gh pr merge ${{ steps.get_pr_number.outputs.pr_number }} --squash --delete-branch
+    # - name: Merge Pull Request
+    #   if: steps.check_changes.outputs.no_changes == 'false'
+    #   run: |
+    #     gh pr merge ${{ steps.get_pr_number.outputs.pr_number }} --squash --delete-branch
