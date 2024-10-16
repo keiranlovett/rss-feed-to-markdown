@@ -70,16 +70,26 @@ async function run() {
       // Fetch and parse the RSS feed
       const feedData = await fetchAndParseFeed(url);
 
-      const isAtomFeed = !!feedData?.feed?.entry;
-      const entries = isAtomFeed
-        ? feedData.feed.entry
-        : feedData?.rss?.channel?.[0]?.item || [];
+      let entries;
+      let generateMarkdown;
+
+      if (feedData.items) {
+        // JSON Feed
+        entries = feedData.items;
+        generateMarkdown = generateJsonMarkdown;
+      } else if (feedData.feed?.entry) {
+        // Atom Feed
+        entries = feedData.feed.entry;
+        generateMarkdown = generateAtomMarkdown;
+      } else {
+        // RSS Feed
+        entries = feedData?.rss?.channel?.[0]?.item || [];
+        generateMarkdown = generateRssMarkdown;
+      }
 
       // Process the feed entries and generate Markdown files
       entries.forEach((entry) => {
-        const { output, date, title } = isAtomFeed
-          ? generateAtomMarkdown(template, entry)
-          : generateRssMarkdown(template, entry);
+        const { output, date, title } = generateMarkdown(template, entry);
         const filePath = saveMarkdown(outputDir, date, title, output);
 
         console.log(`Markdown file '${filePath}' created.`);

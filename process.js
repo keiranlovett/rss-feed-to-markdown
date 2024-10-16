@@ -9,8 +9,15 @@ const imageTypes = ["image/png", "image/jpeg", "image/jpg", "image/gif"];
 // Fetch the RSS feed
 async function fetchAndParseFeed(feedUrl) {
   const response = await axios.get(feedUrl);
-  const feedXml = response.data;
-  return parseStringPromise(feedXml);
+  const feedData = response.data;
+  
+  if (typeof feedData === 'object') {
+    // Assume it's a JSON feed
+    return feedData;
+  } else {
+    // Assume it's an XML feed (RSS or Atom)
+    return parseStringPromise(feedData);
+  }
 }
 
 // Process RSS feed entries and generate Markdown files
@@ -182,9 +189,45 @@ function saveMarkdown(outputDir, date, title, markdown) {
   return filePath;
 }
 
+// Process JSON feed entries and generate Markdown files
+const generateJsonMarkdown = (template, entry) => {
+  const id = entry.id || "";
+  const date = entry.date_published || entry.date_modified || "";
+  const link = entry.url || "";
+  const title = entry.title?.replace(/[^\w\s-]/g, "") || "";
+  const content = entry.content_html || entry.content_text || "";
+  const markdown = new TurndownService({
+    codeBlockStyle: "fenced",
+    fenced: "```",
+    bulletListMarker: "-",
+  }).turndown(content);
+  const description = entry.summary || (content ? content.split(" ").splice(0, 50).join(" ") : "");
+  const author = entry.author?.name || "Unknown Author";
+  const image = entry.image || "";
+  const categories = entry.tags || [];
+
+  return generateOutput(template, {
+    id,
+    date,
+    link,
+    title,
+    content,
+    markdown,
+    description,
+    author,
+    video: "",
+    image,
+    images: [image],
+    categories,
+    views: "",
+    rating: "",
+  });
+};
+
 module.exports = {
   fetchAndParseFeed,
   generateRssMarkdown,
   generateAtomMarkdown,
+  generateJsonMarkdown,
   saveMarkdown,
 };
