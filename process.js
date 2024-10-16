@@ -43,34 +43,39 @@ function parseFeedUrls(feedUrl, feedUrlsFile) {
 
 async function processFeeds(feedUrls, template, outputDir) {
   for (const url of feedUrls) {
-    // Fetch and parse the RSS feed
-    const feedData = await fetchAndParseFeed(url);
+    try {
+      // Fetch and parse the RSS feed
+      const feedData = await fetchAndParseFeed(url);
 
-    let entries;
-    let generateMarkdown;
+      let entries;
+      let generateMarkdown;
 
-    if (feedData.feed?.entry) {
-      // Atom Feed
-      entries = feedData.feed.entry;
-      generateMarkdown = generateAtomMarkdown;
-    } else {
-      // RSS Feed
-      entries = feedData?.rss?.channel?.[0]?.item || [];
-      generateMarkdown = generateRssMarkdown;
-    }
-
-    // Process the feed entries and generate Markdown files
-    entries.forEach((entry) => {
-      try {
-        const { output, date, title } = generateMarkdown(template, entry);
-        const filePath = saveMarkdown(outputDir, date, title, output);
-
-        console.log(`Markdown file '${filePath}' created.`);
-      } catch (error) {
-        console.error(`Error processing feed entry for ${url}`);
-        console.error(error.message);
+      if (feedData.feed?.entry) {
+        // Atom Feed
+        entries = feedData.feed.entry;
+        generateMarkdown = generateAtomMarkdown;
+      } else {
+        // RSS Feed
+        entries = feedData?.rss?.channel?.[0]?.item || [];
+        generateMarkdown = generateRssMarkdown;
       }
-    });
+
+      // Process the feed entries and generate Markdown files
+      entries.forEach((entry) => {
+        try {
+          const { output, date, title } = generateMarkdown(template, entry);
+          const filePath = saveMarkdown(outputDir, date, title, output);
+
+          console.log(`Markdown file '${filePath}' created.`);
+        } catch (error) {
+          console.error(`Error processing feed entry for ${url}`);
+          console.error(error.message);
+        }
+      });
+    } catch (error) {
+      console.error(`Error processing feed at ${url}`);
+      console.error(error.message);
+    }
   }
 }
 
