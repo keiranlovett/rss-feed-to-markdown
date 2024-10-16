@@ -3,6 +3,7 @@ const {
   generateAtomMarkdown,
   saveMarkdown,
 } = require("../process");
+const { parseFeedUrls } = require("../index");
 const fs = require("fs");
 const path = require("path");
 const { parseStringPromise } = require("xml2js");
@@ -261,4 +262,51 @@ test("saveMarkdown should save file correctly", () => {
   const expectedFileName = path.join(outputDir, "2024-05-10-my-title.md");
   expect(fs.writeFileSync).toHaveBeenCalledWith(expectedFileName, markdown);
   expect(filePath).toBe(expectedFileName);
+});
+
+describe("parseFeedUrls", () => {
+  beforeEach(() => {
+    jest.resetModules();
+    jest.clearAllMocks();
+  });
+
+  test("should parse a single URL", () => {
+    const result = parseFeedUrls("https://example.com/feed.xml", null);
+    expect(result).toEqual(["https://example.com/feed.xml"]);
+  });
+
+  test("should parse a JSON array of URLs", () => {
+    const feedUrl = '["https://example1.com/feed.xml", "https://example2.com/feed.xml"]';
+    const result = parseFeedUrls(feedUrl, null);
+    expect(result).toEqual(["https://example1.com/feed.xml", "https://example2.com/feed.xml"]);
+  });
+
+  test("should parse URLs from a JSON file", () => {
+    const fs = require("fs");
+    jest.spyOn(fs, "existsSync").mockReturnValue(true);
+    jest.spyOn(fs, "readFileSync").mockReturnValue('["https://example1.com/feed.xml", "https://example2.com/feed.xml"]');
+
+    const result = parseFeedUrls(null, "feed_urls.json");
+    expect(result).toEqual(["https://example1.com/feed.xml", "https://example2.com/feed.xml"]);
+  });
+
+  test("should parse URLs from a plain text file", () => {
+    const fs = require("fs");
+    jest.spyOn(fs, "existsSync").mockReturnValue(true);
+    jest.spyOn(fs, "readFileSync").mockReturnValue("https://example1.com/feed.xml\nhttps://example2.com/feed.xml");
+
+    const result = parseFeedUrls(null, "feed_urls.txt");
+    expect(result).toEqual(["https://example1.com/feed.xml", "https://example2.com/feed.xml"]);
+  });
+
+  test("should throw an error if neither feedUrl nor feedUrlsFile is provided", () => {
+    expect(() => parseFeedUrls(null, null)).toThrow("Either feed_url or feed_urls_file must be provided.");
+  });
+
+  test("should throw an error if feedUrlsFile doesn't exist", () => {
+    const fs = require("fs");
+    jest.spyOn(fs, "existsSync").mockReturnValue(false);
+
+    expect(() => parseFeedUrls(null, "non_existent_file.json")).toThrow("Feed URLs file 'non_existent_file.json' does not exist.");
+  });
 });
