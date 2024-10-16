@@ -2,12 +2,3 @@
 
 https://example1.com/feed.xml
 https://example2.com/feed.xml
-# ==================================================================
-# RSS Feed List:
-# Add RSS Urls to this file to have them included in the RSS feed
-# ==================================================================
-https://badsector.dev/posts/index.xml
-https://yonkeltron.com/posts/rss.xml
-https://sean.voisen.org/atom.xml
-https://www.jeffgeerling.com/blog.xml
-https://simonwillison.net/atom/everything/

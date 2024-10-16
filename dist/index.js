@@ -61070,13 +61070,7 @@ module.exports = /*#__PURE__*/JSON.parse('{"name":"axios","version":"0.21.4","de
 var __webpack_exports__ = {};
 const core = __nccwpck_require__(4481);
 const github = __nccwpck_require__(4613);
-const {
-  parseFeedUrls,
-  fetchAndParseFeed,
-  generateRssMarkdown,
-  generateAtomMarkdown,
-  saveMarkdown,
-} = __nccwpck_require__(6544);
+const { parseFeedUrls, processFeeds } = __nccwpck_require__(6544);
 const fs = __nccwpck_require__(9896);
 
 async function run() {

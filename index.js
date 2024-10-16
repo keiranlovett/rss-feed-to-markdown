@@ -1,12 +1,6 @@
 const core = require("@actions/core");
 const github = require("@actions/github");
-const {
-  parseFeedUrls,
-  fetchAndParseFeed,
-  generateRssMarkdown,
-  generateAtomMarkdown,
-  saveMarkdown,
-} = require("./process");
+const { parseFeedUrls, processFeeds } = require("./process");
 const fs = require("fs");
 
 async function run() {
