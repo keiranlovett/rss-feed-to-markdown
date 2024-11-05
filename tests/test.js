@@ -1,7 +1,9 @@
 const { 
   parseFeedUrls, 
-  generateFeedMarkdown, 
-  saveMarkdown 
+  generateFeedMarkdown,
+  fetchAndParseFeed,
+  processFeeds, 
+  saveMarkdown
 } = require('../process');
 const fs = require('fs');
 const path = require('path');
@@ -15,6 +17,8 @@ jest.mock('fs', () => {
     writeFileSync: jest.fn(),
   };
 });
+
+
 
 // Helper function to load test files
 const loadFile = (filePath) => {
@@ -152,7 +156,6 @@ describe('Feed Markdown Generation', () => {
   });
 
 });
-
 describe('File Handling and Parsing', () => {
   beforeEach(() => {
     jest.resetModules();
@@ -174,5 +177,5 @@ describe('File Handling and Parsing', () => {
       expect(fs.writeFileSync).toHaveBeenCalledWith(expectedFileName, markdown);
       expect(filePath).toBe(expectedFileName);
     });
-  });
+  });  
 });

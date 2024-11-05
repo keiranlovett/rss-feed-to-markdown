@@ -48,24 +48,24 @@ async function processFeeds(feedUrls, template, outputDir) {
     try {
       // Fetch and parse the RSS feed
       const feedData = await fetchAndParseFeed(url);
+      const feedType = detectFeedType(feedData);
 
       let entries;
-      let generateMarkdown;
 
-      if (feedData.feed?.entry) {
+      if (feedType === 'atom') {
         // Atom Feed
         entries = feedData.feed.entry;
-        generateMarkdown = generateAtomMarkdown;
-      } else {
+      } else if (feedType === 'rss') {
         // RSS Feed
         entries = feedData?.rss?.channel?.[0]?.item || [];
-        generateMarkdown = generateRssMarkdown;
+      } else {
+        throw new Error('Unknown feed type.');
       }
 
       // Process the feed entries and generate Markdown files
       entries.forEach((entry) => {
         try {
-          const { output, date, title } = generateMarkdown(template, entry);
+          const { output, date, title } = generateFeedMarkdown(template, entry);
           const filePath = saveMarkdown(outputDir, date, title, output);
 
           console.log(`Markdown file '${filePath}' created.`);
@@ -96,16 +96,15 @@ async function fetchAndParseFeed(feedUrl) {
 }
 
 // Helper function to detect feed type based on entry fields
-const detectFeedType = (entry) => {
-  // Atom entries usually contain `published` or `updated`, and `link` is an object
-  if (entry.published || entry.updated) return 'Atom';
-  
-  // RSS entries usually contain `pubDate`, `guid`, and `link` is often a string
-  if (entry.pubDate || entry.guid) return 'RSS';
-
-  return 'Unknown'; // Default case if unable to detect
-};
-
+function detectFeedType(feedData) {
+  if (feedData?.feed?.entry) {
+    return 'atom';
+  } else if (feedData?.rss?.channel) {
+    return 'rss';
+  } else {
+    return 'unknown';
+  }
+}
 
 // Main function for generating Markdown 
 const generateFeedMarkdown = (template, entry) => {
