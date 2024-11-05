@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Example Atom Feed</title>
+  <link href="https://example.com/"/>
+  <updated>2024-05-15T10:00:00Z</updated>
+  <author>
+    <name>John Doe</name>
+  </author>
+  <id>urn:uuid:60a76c80-d399-11d9-b93C-0003939e0af6</id>
+  <entry>
+    <title>Atom Entry Title</title>
+    <link href="https://example.com/atom-entry"/>
+    <id>urn:uuid:1225c695-cfb8-4ebb-aaaa-80da344efa6a</id>
+    <updated>2024-05-15T10:00:00Z</updated>
+    <summary>This is an Atom feed entry description.</summary>
+    <author>
+      <name>John Doe</name>
+    </author>
+    <category term="category1"/>
+    <category term="category2"/>
+  </entry>
+</feed>

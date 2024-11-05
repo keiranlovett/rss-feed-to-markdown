@@ -1,15 +1,14 @@
-const core = require('@actions/core');
-const github = require('@actions/github');
-const { fetchAndParseFeed, generateMarkdown, saveMarkdown } = require('./process');
-const fs = require('fs');
+const core = require("@actions/core");
+const github = require("@actions/github");
+const { parseFeedUrls, processFeeds } = require("./process");
+const fs = require("fs");
 
 async function run() {
   try {
-
-    //node index.js feed_url= template_file= output_dir=test
-    const feedUrl = core.getInput('feed_url');
-    const templateFile = core.getInput('template_file');
-    const outputDir = core.getInput('output_dir');
+    const feedUrl = core.getInput("feed_url");
+    const feedUrlsFile = core.getInput("feed_urls_file");
+    const templateFile = core.getInput("template_file");
+    const outputDir = core.getInput("output_dir");
 
     // Validate input values
     if (!fs.existsSync(templateFile)) {
@@ -23,23 +22,22 @@ async function run() {
     }
 
     // Read the template file
-    const template = fs.readFileSync(templateFile, 'utf8');
-    
-    // Fetch and parse the RSS feed
-    const feedData = await fetchAndParseFeed(feedUrl);
+    const template = fs.readFileSync(templateFile, "utf8");
 
-    const entries = feedData?.feed?.entry || feedData?.rss?.channel?.[0]?.item || [];
+    const feedUrls = parseFeedUrls(feedUrl, feedUrlsFile);
 
-    // Process the feed entries and generate Markdown files
-    entries.forEach((entry) => {
-      
-      const { output, date, title } = generateMarkdown(template, entry);
-      const filePath = saveMarkdown(outputDir, date, title, output);
+    if (feedUrls.length === 0) {
+      core.setFailed("No valid feed URLs provided.");
+      return;
+    }
 
-      console.log(`Markdown file '${filePath}' created.`);
-    });
-  } 
-  catch (error) {
+    if (feedUrls.length === 0) {
+      core.setFailed("No valid feed URLs provided.");
+      return;
+    }
+
+    await processFeeds(feedUrls, template, outputDir);
+  } catch (error) {
     core.setFailed(error.message);
   }
 }
