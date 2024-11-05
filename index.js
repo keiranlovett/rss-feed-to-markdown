@@ -1,14 +1,14 @@
-const core = require("@actions/core");
-const github = require("@actions/github");
-const { parseFeedUrls, processFeeds } = require("./process");
-const fs = require("fs");
+const core = require('@actions/core');
+const github = require('@actions/github');
+const { parseFeedUrls, processFeeds } = require('./process');
+const fs = require('fs');
 
 async function run() {
   try {
-    const feedUrl = core.getInput("feed_url");
-    const feedUrlsFile = core.getInput("feed_urls_file");
-    const templateFile = core.getInput("template_file");
-    const outputDir = core.getInput("output_dir");
+    const feedUrl = core.getInput('feed_url');
+    const feedUrlsFile = core.getInput('feed_urls_file');
+    const templateFile = core.getInput('template_file');
+    const outputDir = core.getInput('output_dir');
 
     // Validate input values
     if (!fs.existsSync(templateFile)) {
@@ -22,17 +22,12 @@ async function run() {
     }
 
     // Read the template file
-    const template = fs.readFileSync(templateFile, "utf8");
+    const template = fs.readFileSync(templateFile, 'utf8');
 
     const feedUrls = parseFeedUrls(feedUrl, feedUrlsFile);
 
     if (feedUrls.length === 0) {
-      core.setFailed("No valid feed URLs provided.");
-      return;
-    }
-
-    if (feedUrls.length === 0) {
-      core.setFailed("No valid feed URLs provided.");
+      core.setFailed('No valid feed URLs provided.');
       return;
     }
 

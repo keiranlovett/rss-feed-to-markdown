@@ -1,23 +1,22 @@
-const {
-  generateRssMarkdown,
-  generateAtomMarkdown,
-  saveMarkdown,
-  parseFeedUrls,
-} = require("../process");
-const fs = require("fs");
-const path = require("path");
-const { parseStringPromise } = require("xml2js");
+const { 
+  parseFeedUrls, 
+  generateFeedMarkdown, 
+  saveMarkdown 
+} = require('../process');
+const fs = require('fs');
+const path = require('path');
+const { parseStringPromise } = require('xml2js');
 
 // Mocking writeFileSync while keeping readFileSync operational
-jest.mock("fs", () => {
-  const actualFs = jest.requireActual("fs");
+jest.mock('fs', () => {
+  const actualFs = jest.requireActual('fs');
   return {
     ...actualFs,
     writeFileSync: jest.fn(),
   };
 });
 
-// Helper function to load files
+// Helper function to load test files
 const loadFile = (filePath) => {
   try {
     console.log(`Loading file from path: ${filePath}`);
@@ -37,298 +36,143 @@ const loadFile = (filePath) => {
   }
 };
 
-const normalizeWhitespace = (str) => str.replace(/\s+/g, " ").trim();
+// Helper function for whitespace normalization in assertions
+const normalizeWhitespace = (str) => str.replace(/\s+/g, ' ').trim();
 
-test("Load and process XML and template", async () => {
-  const examplePath = "examples/youtube";
-  const xmlPath = `${examplePath}/feed.xml`;
-  const templatePath = `${examplePath}/template.md`;
+describe('parseFeedUrls', () => {
 
-  const xmlFilePath = path.join(__dirname, xmlPath);
-  const templateFilePath = path.join(__dirname, templatePath);
-
-  const xmlContent = loadFile(xmlFilePath);
-  const templateContent = loadFile(templateFilePath);
-
-  if (!xmlContent || !templateContent) {
-    throw new Error("Failed to load XML or template file");
-  }
-
-  const feedData = await parseStringPromise(xmlContent);
-  console.log("feedData", feedData.feed.entry[0]);
-
-  const entry = feedData.feed.entry[0];
-  const { output, date, title } = generateRssMarkdown(templateContent, entry);
-
-  console.log("Generated markdown:", output);
-  expect(output).toBeDefined();
-});
-
-test("generateRssMarkdown should replace placeholders correctly", async () => {
-  const examplePath = "examples/youtube";
-  const xmlPath = `${examplePath}/feed.xml`;
-  const templatePath = `${examplePath}/template.md`;
-
-  // Load XML file
-  const xmlFilePath = path.join(__dirname, xmlPath);
-  const xmlContent = loadFile(xmlFilePath);
-
-  // Load template file
-  const templateFilePath = path.join(__dirname, templatePath);
-  const templateContent = loadFile(templateFilePath);
-
-  if (!xmlContent || !templateContent) {
-    throw new Error("Failed to load XML or template file");
-  }
-
-  const feedData = await parseStringPromise(xmlContent);
-  const entry = feedData.feed.entry[0];
-  const { output, date, title } = generateRssMarkdown(templateContent, entry);
-
-  const expectedMarkdown = `# My Title
-**Link:** https://www.youtube.com/watch?v=4BxrfhUwldc
-**Description:** My description here
-**Author:** Keiran Lovett
-**Published Date:** 2024-05-10T09:21:26+00:00
-**Video:** https://www.youtube.com/v/4BxrfhUwldc?version=3
-**Thumbnail:** ![Thumbnail](https://i1.ytimg.com/vi/4BxrfhUwldc/hqdefault.jpg)
-**Categories:**
-**Views:** 48
-**Rating:** 5.00`;
-
-  console.log("Expected markdown:", normalizeWhitespace(expectedMarkdown));
-  console.log("Generated markdown:", normalizeWhitespace(output));
-
-  // Perform  assertions
-  expect(normalizeWhitespace(output)).toBe(
-    normalizeWhitespace(expectedMarkdown),
-  );
-  expect(date).toBe("2024-05-10T09:21:26+00:00");
-  expect(title).toBe("My Title");
-});
-
-test("generateAtomMarkdown should replace placeholders correctly", async () => {
-  const examplePath = "examples/atom";
-  const xmlPath = `${examplePath}/feed.xml`;
-  const templatePath = `${examplePath}/template.md`;
-
-  // Load XML file
-  const xmlFilePath = path.join(__dirname, xmlPath);
-  const xmlContent = loadFile(xmlFilePath);
-
-  // Load template file
-  const templateFilePath = path.join(__dirname, templatePath);
-  const templateContent = loadFile(templateFilePath);
-
-  if (!xmlContent || !templateContent) {
-    throw new Error("Failed to load XML or template file");
-  }
-
-  const feedData = await parseStringPromise(xmlContent);
-  const entry = feedData.feed.entry[0];
-  const { output, date, title } = generateAtomMarkdown(templateContent, entry);
-
-  const expectedMarkdown = `# Atom Entry Title
-**Link:** https://example.com/atom-entry
-**Description:** This is an Atom feed entry description.
-**Author:** John Doe
-**Published Date:** 2024-05-15T10:00:00Z
-**Video:**
-**Thumbnail:** ![Thumbnail]()
-**Categories:** category1,category2
-**Views:**
-**Rating:** `;
-
-  console.log("Expected Atom markdown:", normalizeWhitespace(expectedMarkdown));
-  console.log("Generated Atom markdown:", normalizeWhitespace(output));
-
-  // Perform assertions
-  expect(normalizeWhitespace(output)).toBe(
-    normalizeWhitespace(expectedMarkdown),
-  );
-  expect(date).toBe("2024-05-15T10:00:00Z");
-  expect(title).toBe("Atom Entry Title");
-});
-
-test("generateAtomMarkdown should handle Sean Voisen's feed correctly", async () => {
-  const examplePath = "examples/sean_voisen";
-  const xmlPath = `${examplePath}/feed.xml`;
-  const templatePath = `${examplePath}/template.md`;
-
-  // Load XML file
-  const xmlFilePath = path.join(__dirname, xmlPath);
-  const xmlContent = loadFile(xmlFilePath);
-
-  // Load template file
-  const templateFilePath = path.join(__dirname, templatePath);
-  const templateContent = loadFile(templateFilePath);
-
-  if (!xmlContent || !templateContent) {
-    throw new Error("Failed to load XML or template file");
-  }
-
-  const feedData = await parseStringPromise(xmlContent);
-  console.log("feedData", JSON.stringify(feedData));
-  const entry = feedData.feed.entry[0];
-  const { output, date, title } = generateAtomMarkdown(templateContent, entry);
-
-  const expectedMarkdown = `# The Perils of Prediction
-**Link:** https://sean.voisen.org/blog/2023/05/perils-of-prediction/
-**Description:** Thoughts on prediction and decision-making in the context of AI.
-**Author:** Unknown Author
-**Published Date:** 2023-05-21T00:00:00+00:00
-**Video:**
-**Thumbnail:** ![Thumbnail]()
-**Categories:**
-**Views:**
-**Rating:** `;
-
-  console.log(
-    "Expected Sean Voisen Atom markdown:",
-    normalizeWhitespace(expectedMarkdown),
-  );
-  console.log(
-    "Generated Sean Voisen Atom markdown:",
-    normalizeWhitespace(output),
-  );
-
-  // Perform assertions
-  expect(normalizeWhitespace(output)).toBe(
-    normalizeWhitespace(expectedMarkdown),
-  );
-  expect(date).toBe("2023-05-21T00:00:00+00:00");
-  expect(title).toBe("The Perils of Prediction");
-
-  // Additional assertion to check specific parts
-  const outputParts = output.split("**");
-  expect(outputParts[4].trim()).toBe(
-    "Thoughts on prediction and decision-making in the context of AI.",
-  );
-});
-
-test("generateRssMarkdown should replace placeholders correctly", async () => {
-  const examplePath = "examples/rss";
-  const xmlPath = `${examplePath}/feed.xml`;
-  const templatePath = `${examplePath}/template.md`;
-
-  // Load XML file
-  const xmlFilePath = path.join(__dirname, xmlPath);
-  const xmlContent = loadFile(xmlFilePath);
-
-  // Load template file
-  const templateFilePath = path.join(__dirname, templatePath);
-  const templateContent = loadFile(templateFilePath);
-
-  if (!xmlContent || !templateContent) {
-    throw new Error("Failed to load XML or template file");
-  }
-
-  const feedData = await parseStringPromise(xmlContent);
-  const entry = feedData.rss.channel[0].item[0];
-  const { output, date, title } = generateRssMarkdown(templateContent, entry);
-
-  const expectedMarkdown = `# Example entry
-**Link:** http://www.example.com/blog/post/1
-**Description:** Here is some text containing an interesting description.
-**Author:** John Doe
-**Published Date:** Sun, 06 Sep 2009 16:20:00 +0000
-**Video:**
-**Thumbnail:** ![Thumbnail]()
-**Categories:** Technology
-**Views:**
-**Rating:** `;
-
-  console.log("Expected RSS markdown:", normalizeWhitespace(expectedMarkdown));
-  console.log("Generated RSS markdown:", normalizeWhitespace(output));
-
-  // Perform assertions
-  expect(normalizeWhitespace(output)).toBe(
-    normalizeWhitespace(expectedMarkdown),
-  );
-  expect(date).toBe("Sun, 06 Sep 2009 16:20:00 +0000");
-  expect(title).toBe("Example entry");
-});
-
-test("saveMarkdown should save file correctly", () => {
-  const outputDir = "output";
-  const date = "2024-05-10T09:21:26+00:00";
-  const title = "My Title";
-  const markdown = "Test Content";
-
-  fs.writeFileSync.mockImplementation(() => {});
-
-  const filePath = saveMarkdown(outputDir, date, title, markdown);
-
-  const expectedFileName = path.join(outputDir, "2024-05-10-my-title.md");
-  expect(fs.writeFileSync).toHaveBeenCalledWith(expectedFileName, markdown);
-  expect(filePath).toBe(expectedFileName);
-});
-
-describe("parseFeedUrls", () => {
   beforeEach(() => {
     jest.resetModules();
     jest.clearAllMocks();
   });
 
-  test("should parse a single URL", () => {
-    const result = parseFeedUrls("https://example.com/feed.xml", null);
-    expect(result).toEqual(["https://example.com/feed.xml"]);
-  });
-
-  test("should parse a JSON array of URLs", () => {
-    const feedUrl =
-      '["https://example1.com/feed.xml", "https://example2.com/feed.xml"]';
+  it('should parse a single feed URL from JSON string', () => {
+    const feedUrl = JSON.stringify(['http://example.com/feed']);
     const result = parseFeedUrls(feedUrl, null);
-    expect(result).toEqual([
-      "https://example1.com/feed.xml",
-      "https://example2.com/feed.xml",
-    ]);
+    expect(result).toEqual(['http://example.com/feed']);
   });
 
-  test("should parse URLs from a JSON file", () => {
-    const fs = require("fs");
-    jest.spyOn(fs, "existsSync").mockReturnValue(true);
-    jest
-      .spyOn(fs, "readFileSync")
-      .mockReturnValue(
-        '["https://example1.com/feed.xml", "https://example2.com/feed.xml"]',
-      );
-
-    const result = parseFeedUrls(null, "tests/feed_urls.json");
-    expect(result).toEqual([
-      "https://example1.com/feed.xml",
-      "https://example2.com/feed.xml",
-    ]);
+  it('should parse multiple feed URLs from JSON string', () => {
+    const feedUrl = JSON.stringify(['http://example.com/feed1', 'http://example.com/feed2']);
+    const result = parseFeedUrls(feedUrl, null);
+    expect(result).toEqual(['http://example.com/feed1', 'http://example.com/feed2']);
   });
 
-  test("should parse URLs from a plain text file", () => {
-    const fs = require("fs");
-    jest.spyOn(fs, "existsSync").mockReturnValue(true);
-    jest
-      .spyOn(fs, "readFileSync")
-      .mockReturnValue(
-        "https://example1.com/feed.xml\nhttps://example2.com/feed.xml",
-      );
-
-    const result = parseFeedUrls(null, "tests/feed_urls.txt");
-    expect(result).toEqual([
-      "https://example1.com/feed.xml",
-      "https://example2.com/feed.xml",
-    ]);
+  it('should parse feed URLs from a file', () => {
+    const feedUrlsFile = path.join(__dirname, 'feed_urls.txt');
+    const result = parseFeedUrls(null, feedUrlsFile);
+    expect(result).toEqual(['https://example1.com/feed.xml', 'https://example2.com/feed.xml']);
   });
 
-  test("should throw an error if neither feedUrl nor feedUrlsFile is provided", () => {
-    expect(() => parseFeedUrls(null, null)).toThrow(
-      "Either feed_url or feed_urls_file must be provided.",
-    );
+  /*it('should throw an error if feed URLs file does not exist', () => {
+    const feedUrlsFile = path.join(__dirname, 'feed_urls_missing.txt');
+    const result = parseFeedUrls(null, feedUrlsFile);
+    expect(result).toThrowError(`Feed URLs file '${feedUrlsFile}' does not exist.`);
+  });*/
+  
+  it('should throw an error if neither feed_url nor feed_urls_file is provided', () => {
+    expect(() => parseFeedUrls(null, null)).toThrowError('Either feed_url or feed_urls_file must be provided.');
+  });
+});
+
+describe('Feed Markdown Generation', () => {
+
+  const testMarkdownGeneration = async (xmlPath, templatePath, expectedMarkdown, expectedDate, expectedTitle) => {
+    const xmlFilePath = path.join(__dirname, xmlPath);
+    const templateFilePath = path.join(__dirname, templatePath);
+
+    const xmlContent = loadFile(xmlFilePath);
+    const templateContent = loadFile(templateFilePath);
+
+    if (!xmlContent || !templateContent) throw new Error('Failed to load XML or template file');
+
+    const feedData = await parseStringPromise(xmlContent);
+    const entry = feedData.feed?.entry[0] || feedData.rss?.channel[0]?.item[0];
+    const { output, date, title } = generateFeedMarkdown(templateContent, entry);
+
+    expect(normalizeWhitespace(output)).toBe(normalizeWhitespace(expectedMarkdown));
+    expect(date).toBe(expectedDate);
+    expect(title).toBe(expectedTitle);
+  };
+
+  test('should handle specific youtube feed entries', async () => {
+    const expectedMarkdown = `# My Title
+      **Link:** https://www.youtube.com/watch?v=4BxrfhUwldc
+      **Description:** My description here
+      **Author:** Keiran Lovett
+      **Published Date:** 2024-05-10T09:21:26+00:00
+      **Video:** https://www.youtube.com/v/4BxrfhUwldc?version=3
+      **Thumbnail:** ![Thumbnail](https://i1.ytimg.com/vi/4BxrfhUwldc/hqdefault.jpg)
+      **Categories:**
+      **Views:** 48
+      **Rating:** 5.00`;
+    await testMarkdownGeneration('examples/youtube/feed.xml', 'examples/youtube/template.md', expectedMarkdown, '2024-05-10T09:21:26+00:00', 'My Title');
   });
 
-  // test("should throw an error if feedUrlsFile doesn't exist", () => {
-  //   const fs = require("fs");
-  //   jest.spyOn(fs, "existsSync").mockReturnValue(false);
+  test('should handle specific Atom feed entries', async () => {
+    const expectedMarkdown = `# Atom Entry Title
+      **Link:** https://example.com/atom-entry
+      **Description:** This is an Atom feed entry description.
+      **Author:** John Doe
+      **Published Date:** 2024-05-15T10:00:00Z
+      **Video:**
+      **Thumbnail:** ![Thumbnail]()
+      **Categories:** category1,category2
+      **Views:**
+      **Rating:**`;
+    await testMarkdownGeneration('examples/atom/feed.xml', 'examples/atom/template.md', expectedMarkdown, '2024-05-15T10:00:00Z', 'Atom Entry Title');
+  });
 
-  //   expect(() => parseFeedUrls(null, "non_existent_file.json")).toThrow(
-  //     "Feed URLs file 'non_existent_file.json' does not exist.",
-  //   );
-  // });
+  test('should handle specific rss feed entries', async () => {
+    const expectedMarkdown = `# Example entry
+      **Link:** http://www.example.com/blog/post/1
+      **Description:** Here is some text containing an interesting description.
+      **Author:** John Doe
+      **Published Date:** Sun, 06 Sep 2009 16:20:00 +0000
+      **Video:**
+      **Thumbnail:** ![Thumbnail]()
+      **Categories:** Technology
+      **Views:**
+      **Rating:**`;
+    await testMarkdownGeneration('examples/rss/feed.xml', 'examples/rss/template.md', expectedMarkdown, 'Sun, 06 Sep 2009 16:20:00 +0000', 'Example entry');
+  });
+
+  test('should handle sean_voisen test ', async () => {
+    const expectedMarkdown = `# The Perils of Prediction
+      **Link:** https://sean.voisen.org/blog/2023/05/perils-of-prediction/
+      **Description:** Thoughts on prediction and decision-making in the context of AI.
+      **Author:** Unknown Author
+      **Published Date:** 2023-05-21T00:00:00+00:00
+      **Video:** 
+      **Thumbnail:** ![Thumbnail]()
+      **Categories:** 
+      **Views:** 
+      **Rating:** `;
+    await testMarkdownGeneration('examples/sean_voisen/feed.xml', 'examples/sean_voisen/template.md', expectedMarkdown, '2023-05-21T00:00:00+00:00', 'The Perils of Prediction');
+  });
+
+});
+
+describe('File Handling and Parsing', () => {
+  beforeEach(() => {
+    jest.resetModules();
+    jest.clearAllMocks();
+  });
+
+  describe('readAndWrite', () => {
+
+    test('saveMarkdown should save file correctly', () => {
+      const outputDir = 'output';
+      const date = '2024-05-10T09:21:26+00:00';
+      const title = 'My Title';
+      const markdown = 'Test Content';
+
+      fs.writeFileSync.mockImplementation(() => {});
+      const filePath = saveMarkdown(outputDir, date, title, markdown);
+      const expectedFileName = path.join(outputDir, '2024-05-10-my-title.md');
+
+      expect(fs.writeFileSync).toHaveBeenCalledWith(expectedFileName, markdown);
+      expect(filePath).toBe(expectedFileName);
+    });
+  });
 });
